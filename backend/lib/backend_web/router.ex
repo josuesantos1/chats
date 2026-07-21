@@ -9,6 +9,7 @@ defmodule BackendWeb.Router do
     pipe_through :api
 
     resources "/users", UserController, except: [:new, :edit]
+    resources "/contacts", ContactController, except: [:new, :edit]
   end
 
   # Enable LiveDashboard in development
