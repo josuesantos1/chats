@@ -14,7 +14,8 @@ defmodule Backend.Conversations.Conversation do
   @doc false
   def changeset(conversation, attrs) do
     conversation
-    |> cast(attrs, [:id, :type])
-    |> validate_required([:id, :type])
+    |> cast(attrs, [:type])
+    |> validate_required([:type])
+    |> validate_inclusion(:type, ["private", "group"])
   end
 end

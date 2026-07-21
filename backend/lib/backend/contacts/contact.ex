@@ -6,9 +6,8 @@ defmodule Backend.Contacts.Contact do
   @foreign_key_type :binary_id
 
   schema "contacts" do
-
-    field :user, :id
-    field :contact, :id
+    belongs_to :user, Backend.Accounts.User
+    belongs_to :contact, Backend.Accounts.User, foreign_key: :contact_id
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +15,7 @@ defmodule Backend.Contacts.Contact do
   @doc false
   def changeset(contact, attrs) do
     contact
-    |> cast(attrs, [:id])
-    |> validate_required([:id])
+    |> cast(attrs, [:user_id, :contact_id])
+    |> validate_required([:user_id, :contact_id])
   end
 end

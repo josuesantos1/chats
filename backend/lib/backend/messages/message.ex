@@ -7,8 +7,8 @@ defmodule Backend.Messages.Message do
 
   schema "messages" do
     field :content, :string
-    field :author, :id
-    field :conversation, :id
+    belongs_to :author, Backend.Accounts.User, foreign_key: :author_id
+    belongs_to :conversation, Backend.Conversations.Conversation
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +16,7 @@ defmodule Backend.Messages.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:id, :content])
-    |> validate_required([:id, :content])
+    |> cast(attrs, [:content, :author_id, :conversation_id])
+    |> validate_required([:content, :author_id, :conversation_id])
   end
 end

@@ -7,8 +7,8 @@ defmodule Backend.Groups.Group do
 
   schema "groups" do
     field :name, :string
-    field :creator, :id
-    field :conversation, :id
+    belongs_to :creator, Backend.Accounts.User, foreign_key: :creator_id
+    belongs_to :conversation, Backend.Conversations.Conversation
 
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +16,7 @@ defmodule Backend.Groups.Group do
   @doc false
   def changeset(group, attrs) do
     group
-    |> cast(attrs, [:id, :name])
-    |> validate_required([:id, :name])
+    |> cast(attrs, [:name, :creator_id, :conversation_id])
+    |> validate_required([:name, :creator_id, :conversation_id])
   end
 end
