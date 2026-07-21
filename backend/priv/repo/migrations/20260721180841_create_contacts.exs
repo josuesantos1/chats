@@ -2,10 +2,10 @@ defmodule Backend.Repo.Migrations.CreateContacts do
   use Ecto.Migration
 
   def change do
-    create table(:contacts) do
-      add :id, :uuid
-      add :user, references(:users, on_delete: :nothing)
-      add :contact, references(:users, on_delete: :nothing)
+    create table(:contacts, primary_key: false) do
+      add :id, :uuid, primary_key: true
+      add :user, references(:users, type: :uuid, on_delete: :nothing)
+      add :contact, references(:users, type: :uuid, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end

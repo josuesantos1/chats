@@ -2,11 +2,11 @@ defmodule Backend.Repo.Migrations.CreateMessages do
   use Ecto.Migration
 
   def change do
-    create table(:messages) do
-      add :id, :uuid
+    create table(:messages, primary_key: false) do
+      add :id, :uuid, primary_key: true
       add :content, :text
-      add :author, references(:users, on_delete: :nothing)
-      add :conversation, references(:conversations, on_delete: :nothing)
+      add :author, references(:users, type: :uuid, on_delete: :nothing)
+      add :conversation, references(:conversations, type: :uuid, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end
