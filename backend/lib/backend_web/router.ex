@@ -10,6 +10,7 @@ defmodule BackendWeb.Router do
 
     resources "/users", UserController, except: [:new, :edit]
     resources "/contacts", ContactController, except: [:new, :edit]
+    resources "/conversations", ConversationController, except: [:new, :edit]
   end
 
   # Enable LiveDashboard in development
