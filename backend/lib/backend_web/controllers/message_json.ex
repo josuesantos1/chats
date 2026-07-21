@@ -18,8 +18,10 @@ defmodule BackendWeb.MessageJSON do
   defp data(%Message{} = message) do
     %{
       id: message.id,
-      id: message.id,
-      content: message.content
+      content: message.content,
+      author_id: message.author_id,
+      conversation_id: message.conversation_id,
+      inserted_at: message.inserted_at
     }
   end
 end
