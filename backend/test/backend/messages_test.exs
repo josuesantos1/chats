@@ -7,8 +7,10 @@ defmodule Backend.MessagesTest do
     alias Backend.Messages.Message
 
     import Backend.MessagesFixtures
+    import Backend.AccountsFixtures
+    import Backend.ConversationsFixtures
 
-    @invalid_attrs %{id: nil, content: nil}
+    @invalid_attrs %{content: nil}
 
     test "list_messages/0 returns all messages" do
       message = message_fixture()
@@ -21,11 +23,13 @@ defmodule Backend.MessagesTest do
     end
 
     test "create_message/1 with valid data creates a message" do
-      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662", content: "some content"}
+      user = user_fixture()
+      conversation = conversation_fixture()
+      valid_attrs = %{content: "some content", author_id: user.id, conversation_id: conversation.id}
 
       assert {:ok, %Message{} = message} = Messages.create_message(valid_attrs)
-      assert message.id == "7488a646-e31f-11e4-aace-600308960662"
       assert message.content == "some content"
+      assert message.author_id == user.id
     end
 
     test "create_message/1 with invalid data returns error changeset" do
@@ -34,14 +38,9 @@ defmodule Backend.MessagesTest do
 
     test "update_message/2 with valid data updates the message" do
       message = message_fixture()
-
-      update_attrs = %{
-        id: "7488a646-e31f-11e4-aace-600308960668",
-        content: "some updated content"
-      }
+      update_attrs = %{content: "some updated content"}
 
       assert {:ok, %Message{} = message} = Messages.update_message(message, update_attrs)
-      assert message.id == "7488a646-e31f-11e4-aace-600308960668"
       assert message.content == "some updated content"
     end
 

@@ -37,9 +37,7 @@ defmodule BackendWeb.UserControllerTest do
       conn = get(conn, ~p"/api/users/#{id}")
 
       assert %{
-               "id" => ^id,
                "email" => "some email",
-               "id" => "7488a646-e31f-11e4-aace-600308960662",
                "name" => "some name",
                "username" => "some username"
              } = json_response(conn, 200)["data"]
@@ -61,9 +59,7 @@ defmodule BackendWeb.UserControllerTest do
       conn = get(conn, ~p"/api/users/#{id}")
 
       assert %{
-               "id" => ^id,
                "email" => "some updated email",
-               "id" => "7488a646-e31f-11e4-aace-600308960668",
                "name" => "some updated name",
                "username" => "some updated username"
              } = json_response(conn, 200)["data"]

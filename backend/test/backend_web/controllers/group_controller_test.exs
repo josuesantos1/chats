@@ -2,20 +2,19 @@ defmodule BackendWeb.GroupControllerTest do
   use BackendWeb.ConnCase
 
   import Backend.GroupsFixtures
+  import Backend.AccountsFixtures
+  import Backend.ConversationsFixtures
   alias Backend.Groups.Group
 
-  @create_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960662",
-    name: "some name"
-  }
-  @update_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960668",
-    name: "some updated name"
-  }
-  @invalid_attrs %{id: nil, name: nil}
+  @invalid_attrs %{name: nil}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = user_fixture()
+    conversation = conversation_fixture(%{type: "group"})
+
+    create_attrs = %{name: "some name", creator_id: user.id, conversation_id: conversation.id}
+
+    {:ok, conn: put_req_header(conn, "accept", "application/json"), create_attrs: create_attrs}
   end
 
   describe "index" do
@@ -26,17 +25,12 @@ defmodule BackendWeb.GroupControllerTest do
   end
 
   describe "create group" do
-    test "renders group when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/groups", group: @create_attrs)
+    test "renders group when data is valid", %{conn: conn, create_attrs: create_attrs} do
+      conn = post(conn, ~p"/api/groups", group: create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/groups/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "id" => "7488a646-e31f-11e4-aace-600308960662",
-               "name" => "some name"
-             } = json_response(conn, 200)["data"]
+      assert %{"id" => ^id, "name" => "some name"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -49,16 +43,11 @@ defmodule BackendWeb.GroupControllerTest do
     setup [:create_group]
 
     test "renders group when data is valid", %{conn: conn, group: %Group{id: id} = group} do
-      conn = put(conn, ~p"/api/groups/#{group}", group: @update_attrs)
+      conn = put(conn, ~p"/api/groups/#{group}", group: %{name: "some updated name"})
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, ~p"/api/groups/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "id" => "7488a646-e31f-11e4-aace-600308960668",
-               "name" => "some updated name"
-             } = json_response(conn, 200)["data"]
+      assert %{"name" => "some updated name"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, group: group} do
@@ -82,7 +71,6 @@ defmodule BackendWeb.GroupControllerTest do
 
   defp create_group(_) do
     group = group_fixture()
-
     %{group: group}
   end
 end

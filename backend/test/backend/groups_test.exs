@@ -7,8 +7,10 @@ defmodule Backend.GroupsTest do
     alias Backend.Groups.Group
 
     import Backend.GroupsFixtures
+    import Backend.AccountsFixtures
+    import Backend.ConversationsFixtures
 
-    @invalid_attrs %{id: nil, name: nil}
+    @invalid_attrs %{name: nil}
 
     test "list_groups/0 returns all groups" do
       group = group_fixture()
@@ -21,11 +23,13 @@ defmodule Backend.GroupsTest do
     end
 
     test "create_group/1 with valid data creates a group" do
-      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662", name: "some name"}
+      user = user_fixture()
+      conversation = conversation_fixture(%{type: "group"})
+      valid_attrs = %{name: "some name", creator_id: user.id, conversation_id: conversation.id}
 
       assert {:ok, %Group{} = group} = Groups.create_group(valid_attrs)
-      assert group.id == "7488a646-e31f-11e4-aace-600308960662"
       assert group.name == "some name"
+      assert group.creator_id == user.id
     end
 
     test "create_group/1 with invalid data returns error changeset" do
@@ -34,10 +38,9 @@ defmodule Backend.GroupsTest do
 
     test "update_group/2 with valid data updates the group" do
       group = group_fixture()
-      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name"}
+      update_attrs = %{name: "some updated name"}
 
       assert {:ok, %Group{} = group} = Groups.update_group(group, update_attrs)
-      assert group.id == "7488a646-e31f-11e4-aace-600308960668"
       assert group.name == "some updated name"
     end
 

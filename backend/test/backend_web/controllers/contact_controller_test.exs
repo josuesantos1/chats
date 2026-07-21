@@ -2,18 +2,18 @@ defmodule BackendWeb.ContactControllerTest do
   use BackendWeb.ConnCase
 
   import Backend.ContactsFixtures
+  import Backend.AccountsFixtures
   alias Backend.Contacts.Contact
 
-  @create_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960662"
-  }
-  @update_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960668"
-  }
-  @invalid_attrs %{id: nil}
+  @invalid_attrs %{user_id: nil, contact_id: nil}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = user_fixture(%{email: "user@email.com", username: "user"})
+    contact_user = user_fixture(%{email: "contact@email.com", username: "contact"})
+
+    create_attrs = %{user_id: user.id, contact_id: contact_user.id}
+
+    {:ok, conn: put_req_header(conn, "accept", "application/json"), create_attrs: create_attrs}
   end
 
   describe "index" do
@@ -24,16 +24,12 @@ defmodule BackendWeb.ContactControllerTest do
   end
 
   describe "create contact" do
-    test "renders contact when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/contacts", contact: @create_attrs)
+    test "renders contact when data is valid", %{conn: conn, create_attrs: create_attrs} do
+      conn = post(conn, ~p"/api/contacts", contact: create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/contacts/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "id" => "7488a646-e31f-11e4-aace-600308960662"
-             } = json_response(conn, 200)["data"]
+      assert %{"id" => ^id} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -45,16 +41,9 @@ defmodule BackendWeb.ContactControllerTest do
   describe "update contact" do
     setup [:create_contact]
 
-    test "renders contact when data is valid", %{conn: conn, contact: %Contact{id: id} = contact} do
-      conn = put(conn, ~p"/api/contacts/#{contact}", contact: @update_attrs)
+    test "renders contact when data is valid", %{conn: conn, contact: %Contact{id: id} = contact, create_attrs: create_attrs} do
+      conn = put(conn, ~p"/api/contacts/#{contact}", contact: create_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get(conn, ~p"/api/contacts/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "id" => "7488a646-e31f-11e4-aace-600308960668"
-             } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, contact: contact} do
@@ -78,7 +67,6 @@ defmodule BackendWeb.ContactControllerTest do
 
   defp create_contact(_) do
     contact = contact_fixture()
-
     %{contact: contact}
   end
 end

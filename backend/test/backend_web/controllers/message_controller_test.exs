@@ -2,20 +2,19 @@ defmodule BackendWeb.MessageControllerTest do
   use BackendWeb.ConnCase
 
   import Backend.MessagesFixtures
+  import Backend.AccountsFixtures
+  import Backend.ConversationsFixtures
   alias Backend.Messages.Message
 
-  @create_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960662",
-    content: "some content"
-  }
-  @update_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960668",
-    content: "some updated content"
-  }
-  @invalid_attrs %{id: nil, content: nil}
+  @invalid_attrs %{content: nil}
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = user_fixture()
+    conversation = conversation_fixture()
+
+    create_attrs = %{content: "some content", author_id: user.id, conversation_id: conversation.id}
+
+    {:ok, conn: put_req_header(conn, "accept", "application/json"), create_attrs: create_attrs}
   end
 
   describe "index" do
@@ -26,17 +25,12 @@ defmodule BackendWeb.MessageControllerTest do
   end
 
   describe "create message" do
-    test "renders message when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/messages", message: @create_attrs)
+    test "renders message when data is valid", %{conn: conn, create_attrs: create_attrs} do
+      conn = post(conn, ~p"/api/messages", message: create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/messages/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "content" => "some content",
-               "id" => "7488a646-e31f-11e4-aace-600308960662"
-             } = json_response(conn, 200)["data"]
+      assert %{"id" => ^id, "content" => "some content"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -49,16 +43,11 @@ defmodule BackendWeb.MessageControllerTest do
     setup [:create_message]
 
     test "renders message when data is valid", %{conn: conn, message: %Message{id: id} = message} do
-      conn = put(conn, ~p"/api/messages/#{message}", message: @update_attrs)
+      conn = put(conn, ~p"/api/messages/#{message}", message: %{content: "some updated content"})
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, ~p"/api/messages/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "content" => "some updated content",
-               "id" => "7488a646-e31f-11e4-aace-600308960668"
-             } = json_response(conn, 200)["data"]
+      assert %{"content" => "some updated content"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, message: message} do
@@ -82,7 +71,6 @@ defmodule BackendWeb.MessageControllerTest do
 
   defp create_message(_) do
     message = message_fixture()
-
     %{message: message}
   end
 end

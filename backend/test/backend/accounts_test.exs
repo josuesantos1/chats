@@ -8,7 +8,7 @@ defmodule Backend.AccountsTest do
 
     import Backend.AccountsFixtures
 
-    @invalid_attrs %{id: nil, name: nil, username: nil, email: nil}
+    @invalid_attrs %{name: nil, username: nil, email: nil}
 
     test "list_users/0 returns all users" do
       user = user_fixture()
@@ -22,14 +22,12 @@ defmodule Backend.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       valid_attrs = %{
-        id: "7488a646-e31f-11e4-aace-600308960662",
         name: "some name",
         username: "some username",
         email: "some email"
       }
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
-      assert user.id == "7488a646-e31f-11e4-aace-600308960662"
       assert user.name == "some name"
       assert user.username == "some username"
       assert user.email == "some email"
@@ -43,14 +41,12 @@ defmodule Backend.AccountsTest do
       user = user_fixture()
 
       update_attrs = %{
-        id: "7488a646-e31f-11e4-aace-600308960668",
         name: "some updated name",
         username: "some updated username",
         email: "some updated email"
       }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
-      assert user.id == "7488a646-e31f-11e4-aace-600308960668"
       assert user.name == "some updated name"
       assert user.username == "some updated username"
       assert user.email == "some updated email"

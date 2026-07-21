@@ -7,8 +7,9 @@ defmodule Backend.ContactsTest do
     alias Backend.Contacts.Contact
 
     import Backend.ContactsFixtures
+    import Backend.AccountsFixtures
 
-    @invalid_attrs %{id: nil}
+    @invalid_attrs %{user_id: nil, contact_id: nil}
 
     test "list_contacts/0 returns all contacts" do
       contact = contact_fixture()
@@ -21,10 +22,13 @@ defmodule Backend.ContactsTest do
     end
 
     test "create_contact/1 with valid data creates a contact" do
-      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662"}
+      user = user_fixture(%{email: "user@email.com", username: "user"})
+      contact_user = user_fixture(%{email: "contact@email.com", username: "contact"})
+      valid_attrs = %{user_id: user.id, contact_id: contact_user.id}
 
       assert {:ok, %Contact{} = contact} = Contacts.create_contact(valid_attrs)
-      assert contact.id == "7488a646-e31f-11e4-aace-600308960662"
+      assert contact.user_id == user.id
+      assert contact.contact_id == contact_user.id
     end
 
     test "create_contact/1 with invalid data returns error changeset" do
@@ -33,10 +37,11 @@ defmodule Backend.ContactsTest do
 
     test "update_contact/2 with valid data updates the contact" do
       contact = contact_fixture()
-      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668"}
+      user = user_fixture(%{email: "new@email.com", username: "new_user"})
+      update_attrs = %{user_id: user.id}
 
       assert {:ok, %Contact{} = contact} = Contacts.update_contact(contact, update_attrs)
-      assert contact.id == "7488a646-e31f-11e4-aace-600308960668"
+      assert contact.user_id == user.id
     end
 
     test "update_contact/2 with invalid data returns error changeset" do

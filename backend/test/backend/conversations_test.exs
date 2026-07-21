@@ -8,7 +8,7 @@ defmodule Backend.ConversationsTest do
 
     import Backend.ConversationsFixtures
 
-    @invalid_attrs %{id: nil, type: nil}
+    @invalid_attrs %{type: nil}
 
     test "list_conversations/0 returns all conversations" do
       conversation = conversation_fixture()
@@ -21,13 +21,12 @@ defmodule Backend.ConversationsTest do
     end
 
     test "create_conversation/1 with valid data creates a conversation" do
-      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662", type: "some type"}
+      valid_attrs = %{type: "private"}
 
       assert {:ok, %Conversation{} = conversation} =
                Conversations.create_conversation(valid_attrs)
 
-      assert conversation.id == "7488a646-e31f-11e4-aace-600308960662"
-      assert conversation.type == "some type"
+      assert conversation.type == "private"
     end
 
     test "create_conversation/1 with invalid data returns error changeset" do
@@ -36,13 +35,12 @@ defmodule Backend.ConversationsTest do
 
     test "update_conversation/2 with valid data updates the conversation" do
       conversation = conversation_fixture()
-      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668", type: "some updated type"}
+      update_attrs = %{type: "group"}
 
       assert {:ok, %Conversation{} = conversation} =
                Conversations.update_conversation(conversation, update_attrs)
 
-      assert conversation.id == "7488a646-e31f-11e4-aace-600308960668"
-      assert conversation.type == "some updated type"
+      assert conversation.type == "group"
     end
 
     test "update_conversation/2 with invalid data returns error changeset" do

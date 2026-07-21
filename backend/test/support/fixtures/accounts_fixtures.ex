@@ -11,8 +11,7 @@ defmodule Backend.AccountsFixtures do
     {:ok, user} =
       attrs
       |> Enum.into(%{
-        email: "some email",
-        id: "7488a646-e31f-11e4-aace-600308960662",
+        email: "some@email.com",
         name: "some name",
         username: "some username"
       })

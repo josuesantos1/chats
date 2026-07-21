@@ -4,15 +4,22 @@ defmodule Backend.GroupsFixtures do
   entities via the `Backend.Groups` context.
   """
 
+  import Backend.AccountsFixtures
+  import Backend.ConversationsFixtures
+
   @doc """
   Generate a group.
   """
   def group_fixture(attrs \\ %{}) do
+    user = user_fixture()
+    conversation = conversation_fixture(%{type: "group"})
+
     {:ok, group} =
       attrs
       |> Enum.into(%{
-        id: "7488a646-e31f-11e4-aace-600308960662",
-        name: "some name"
+        name: "some name",
+        creator_id: user.id,
+        conversation_id: conversation.id
       })
       |> Backend.Groups.create_group()
 

@@ -4,15 +4,9 @@ defmodule BackendWeb.ConversationControllerTest do
   import Backend.ConversationsFixtures
   alias Backend.Conversations.Conversation
 
-  @create_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960662",
-    type: "some type"
-  }
-  @update_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960668",
-    type: "some updated type"
-  }
-  @invalid_attrs %{id: nil, type: nil}
+  @create_attrs %{type: "private"}
+  @update_attrs %{type: "group"}
+  @invalid_attrs %{type: nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -32,11 +26,7 @@ defmodule BackendWeb.ConversationControllerTest do
 
       conn = get(conn, ~p"/api/conversations/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "id" => "7488a646-e31f-11e4-aace-600308960662",
-               "type" => "some type"
-             } = json_response(conn, 200)["data"]
+      assert %{"type" => "private"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -57,11 +47,7 @@ defmodule BackendWeb.ConversationControllerTest do
 
       conn = get(conn, ~p"/api/conversations/#{id}")
 
-      assert %{
-               "id" => ^id,
-               "id" => "7488a646-e31f-11e4-aace-600308960668",
-               "type" => "some updated type"
-             } = json_response(conn, 200)["data"]
+      assert %{"type" => "group"} = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, conversation: conversation} do
