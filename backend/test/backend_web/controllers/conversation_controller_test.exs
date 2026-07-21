@@ -48,7 +48,10 @@ defmodule BackendWeb.ConversationControllerTest do
   describe "update conversation" do
     setup [:create_conversation]
 
-    test "renders conversation when data is valid", %{conn: conn, conversation: %Conversation{id: id} = conversation} do
+    test "renders conversation when data is valid", %{
+      conn: conn,
+      conversation: %Conversation{id: id} = conversation
+    } do
       conn = put(conn, ~p"/api/conversations/#{conversation}", conversation: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

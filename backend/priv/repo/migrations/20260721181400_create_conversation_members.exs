@@ -4,7 +4,10 @@ defmodule Backend.Repo.Migrations.CreateConversationMembers do
   def change do
     create table(:conversation_members, primary_key: false) do
       add :id, :uuid, primary_key: true
-      add :conversation_id, references(:conversations, type: :uuid, on_delete: :delete_all), null: false
+
+      add :conversation_id, references(:conversations, type: :uuid, on_delete: :delete_all),
+        null: false
+
       add :user_id, references(:users, type: :uuid, on_delete: :delete_all), null: false
 
       timestamps(type: :utc_datetime)

@@ -23,7 +23,9 @@ defmodule Backend.ConversationsTest do
     test "create_conversation/1 with valid data creates a conversation" do
       valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662", type: "some type"}
 
-      assert {:ok, %Conversation{} = conversation} = Conversations.create_conversation(valid_attrs)
+      assert {:ok, %Conversation{} = conversation} =
+               Conversations.create_conversation(valid_attrs)
+
       assert conversation.id == "7488a646-e31f-11e4-aace-600308960662"
       assert conversation.type == "some type"
     end
@@ -36,14 +38,19 @@ defmodule Backend.ConversationsTest do
       conversation = conversation_fixture()
       update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668", type: "some updated type"}
 
-      assert {:ok, %Conversation{} = conversation} = Conversations.update_conversation(conversation, update_attrs)
+      assert {:ok, %Conversation{} = conversation} =
+               Conversations.update_conversation(conversation, update_attrs)
+
       assert conversation.id == "7488a646-e31f-11e4-aace-600308960668"
       assert conversation.type == "some updated type"
     end
 
     test "update_conversation/2 with invalid data returns error changeset" do
       conversation = conversation_fixture()
-      assert {:error, %Ecto.Changeset{}} = Conversations.update_conversation(conversation, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Conversations.update_conversation(conversation, @invalid_attrs)
+
       assert conversation == Conversations.get_conversation!(conversation.id)
     end
 

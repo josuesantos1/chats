@@ -9,7 +9,11 @@ defmodule BackendWeb.ConversationChannel do
   end
 
   @impl true
-  def handle_in("send_message", %{"conversation_id" => conversation_id, "author_id" => author_id, "content" => content}, socket) do
+  def handle_in(
+        "send_message",
+        %{"conversation_id" => conversation_id, "author_id" => author_id, "content" => content},
+        socket
+      ) do
     attrs = %{
       conversation_id: conversation_id,
       author_id: author_id,
@@ -25,6 +29,7 @@ defmodule BackendWeb.ConversationChannel do
           content: message.content,
           inserted_at: message.inserted_at
         })
+
         {:noreply, socket}
 
       {:error, changeset} ->

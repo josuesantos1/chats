@@ -34,7 +34,11 @@ defmodule Backend.MessagesTest do
 
     test "update_message/2 with valid data updates the message" do
       message = message_fixture()
-      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668", content: "some updated content"}
+
+      update_attrs = %{
+        id: "7488a646-e31f-11e4-aace-600308960668",
+        content: "some updated content"
+      }
 
       assert {:ok, %Message{} = message} = Messages.update_message(message, update_attrs)
       assert message.id == "7488a646-e31f-11e4-aace-600308960668"

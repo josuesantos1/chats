@@ -21,7 +21,12 @@ defmodule Backend.AccountsTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{id: "7488a646-e31f-11e4-aace-600308960662", name: "some name", username: "some username", email: "some email"}
+      valid_attrs = %{
+        id: "7488a646-e31f-11e4-aace-600308960662",
+        name: "some name",
+        username: "some username",
+        email: "some email"
+      }
 
       assert {:ok, %User{} = user} = Accounts.create_user(valid_attrs)
       assert user.id == "7488a646-e31f-11e4-aace-600308960662"
@@ -36,7 +41,13 @@ defmodule Backend.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      update_attrs = %{id: "7488a646-e31f-11e4-aace-600308960668", name: "some updated name", username: "some updated username", email: "some updated email"}
+
+      update_attrs = %{
+        id: "7488a646-e31f-11e4-aace-600308960668",
+        name: "some updated name",
+        username: "some updated username",
+        email: "some updated email"
+      }
 
       assert {:ok, %User{} = user} = Accounts.update_user(user, update_attrs)
       assert user.id == "7488a646-e31f-11e4-aace-600308960668"
