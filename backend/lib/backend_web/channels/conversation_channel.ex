@@ -1,4 +1,8 @@
 defmodule BackendWeb.ConversationChannel do
+  @moduledoc """
+  The ConversationChannel module handles real-time communication for conversations in the chat application. It allows users to join conversation channels and send messages, which are then broadcasted to all participants in the conversation.
+  """
+
   use BackendWeb, :channel
 
   alias Backend.Messages

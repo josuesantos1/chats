@@ -18,7 +18,6 @@ defmodule BackendWeb.ConversationJSON do
   defp data(%Conversation{} = conversation) do
     %{
       id: conversation.id,
-      id: conversation.id,
       type: conversation.type
     }
   end

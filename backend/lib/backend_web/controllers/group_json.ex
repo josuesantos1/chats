@@ -18,7 +18,6 @@ defmodule BackendWeb.GroupJSON do
   defp data(%Group{} = group) do
     %{
       id: group.id,
-      id: group.id,
       name: group.name
     }
   end

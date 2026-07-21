@@ -18,7 +18,6 @@ defmodule BackendWeb.UserJSON do
   defp data(%User{} = user) do
     %{
       id: user.id,
-      id: user.id,
       name: user.name,
       email: user.email,
       username: user.username

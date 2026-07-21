@@ -65,14 +65,11 @@ defmodule Backend.MixProject do
 
       # Quality
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.4", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:doctor, "~> 0.23", only: :dev, runtime: false},
 
       # Security
-      {:sobelow, "~> 0.14",
-        only: [:dev, :test],
-        runtime: false,
-        warn_if_outdated: true},
+      {:sobelow, "~> 0.14", only: [:dev, :test], runtime: false, warn_if_outdated: true},
 
       # Tests
       {:stream_data, "~> 1.3", only: :test},
@@ -94,34 +91,28 @@ defmodule Backend.MixProject do
         "deps.get",
         "ecto.setup"
       ],
-
       "ecto.setup": [
         "ecto.create",
         "ecto.migrate",
         "run priv/repo/seeds.exs"
       ],
-
       "ecto.reset": [
         "ecto.drop",
         "ecto.setup"
       ],
-
       test: [
         "ecto.create --quiet",
         "ecto.migrate --quiet",
         "test"
       ],
-
       quality: [
         "format --check-formatted",
         "compile --warnings-as-errors",
         "credo --strict"
       ],
-
       security: [
         "sobelow"
       ],
-
       ci: [
         "quality",
         "dialyzer",
@@ -129,7 +120,6 @@ defmodule Backend.MixProject do
         "test",
         "coveralls"
       ],
-
       precommit: [
         "ci"
       ]
