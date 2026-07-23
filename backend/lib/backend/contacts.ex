@@ -21,6 +21,12 @@ defmodule Backend.Contacts do
     Repo.all(Contact)
   end
 
+  def list_contacts_for_user(user_id) do
+    Contact
+    |> where([c], c.user_id == ^user_id)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single contact.
 

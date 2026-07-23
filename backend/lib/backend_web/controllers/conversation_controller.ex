@@ -7,7 +7,7 @@ defmodule BackendWeb.ConversationController do
   action_fallback BackendWeb.FallbackController
 
   def index(conn, _params) do
-    conversations = Conversations.list_conversations()
+    conversations = Conversations.list_conversations_for_user(conn.assigns.current_user.id)
     render(conn, :index, conversations: conversations)
   end
 

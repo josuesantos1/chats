@@ -7,7 +7,7 @@ defmodule BackendWeb.ContactController do
   action_fallback BackendWeb.FallbackController
 
   def index(conn, _params) do
-    contacts = Contacts.list_contacts()
+    contacts = Contacts.list_contacts_for_user(conn.assigns.current_user.id)
     render(conn, :index, contacts: contacts)
   end
 

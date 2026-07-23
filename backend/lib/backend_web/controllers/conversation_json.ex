@@ -20,9 +20,16 @@ defmodule BackendWeb.ConversationJSON do
   end
 
   defp data(%Conversation{} = conversation) do
+    member_ids =
+      case conversation.conversation_members do
+        %Ecto.Association.NotLoaded{} -> []
+        members -> Enum.map(members, & &1.user_id)
+      end
+
     %{
       id: conversation.id,
-      type: conversation.type
+      type: conversation.type,
+      member_ids: member_ids
     }
   end
 end

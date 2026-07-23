@@ -5,10 +5,23 @@ defmodule BackendWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authenticate do
+    plug BackendWeb.Plugs.AuthPlug
+  end
+
+  # Public routes (no auth required)
   scope "/api", BackendWeb do
     pipe_through :api
 
-    resources "/users", UserController, except: [:new, :edit]
+    post "/users", UserController, :create
+    post "/sessions", SessionController, :create
+  end
+
+  # Protected routes
+  scope "/api", BackendWeb do
+    pipe_through [:api, :authenticate]
+
+    resources "/users", UserController, only: [:index, :show, :update, :delete]
     resources "/contacts", ContactController, except: [:new, :edit]
 
     resources "/conversations", ConversationController, except: [:new, :edit] do

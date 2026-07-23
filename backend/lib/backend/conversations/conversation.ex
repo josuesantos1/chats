@@ -8,6 +8,8 @@ defmodule Backend.Conversations.Conversation do
   schema "conversations" do
     field :type, :string
 
+    has_many :conversation_members, Backend.Conversations.ConversationMember
+
     timestamps(type: :utc_datetime)
   end
 

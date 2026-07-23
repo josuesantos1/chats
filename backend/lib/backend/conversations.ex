@@ -22,6 +22,15 @@ defmodule Backend.Conversations do
     Repo.all(Conversation)
   end
 
+  def list_conversations_for_user(user_id) do
+    Conversation
+    |> join(:inner, [c], cm in ConversationMember,
+      on: cm.conversation_id == c.id and cm.user_id == ^user_id
+    )
+    |> Repo.all()
+    |> Repo.preload(:conversation_members)
+  end
+
   def list_conversation_members(conversation_id) do
     ConversationMember
     |> where([cm], cm.conversation_id == ^conversation_id)
