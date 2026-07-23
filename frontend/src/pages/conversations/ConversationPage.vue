@@ -5,7 +5,7 @@
       <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0">
         <button
           class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
-          v-on:click="((cancelSearch = true), (searchQuery = ''), (showSearchSection = false))"
+          @click="((cancelSearch = true), (searchQuery = ''), (showSearchSection = false))"
         >
           <!-- Cancel search icon -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,10 +29,10 @@
             />
           </svg>
           <input
+            v-model="searchQuery"
             type="text"
             placeholder="Pesquisar mensagens..."
             class="w-full text-sm bg-gray-50 mx-2 rounded-xl focus:outline-none"
-            v-model="searchQuery"
             @input="searchHandler"
           />
         </span>
@@ -42,8 +42,8 @@
         </span>
 
         <button
-          v-on:click="nextSearchResult"
           class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
+          @click="nextSearchResult"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -56,8 +56,8 @@
         </button>
 
         <button
-          v-on:click="prevSearchResult"
           class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
+          @click="prevSearchResult"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -77,7 +77,7 @@
           <h2 class="font-semibold text-gray-900 text-sm">{{ conversationName }}</h2>
           <p class="text-xs text-gray-400 truncate">{{ subtitle }}</p>
         </div>
-        <button class="text-gray-400 hover:text-gray-600 p-1" v-on:click="searchHandler">
+        <button class="text-gray-400 hover:text-gray-600 p-1" @click="searchHandler">
           <!-- Search icon -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

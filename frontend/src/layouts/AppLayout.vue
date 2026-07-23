@@ -92,18 +92,18 @@
     @close="ui.closeContactsModal"
     @start-conversation="onStartPrivateConversation"
     @open-add-contact="
-      ui.closeContactsModal()
+      ui.closeContactsModal(),
       addContactModalOpen = true
     "
   />
   <AddContactModal
     v-if="addContactModalOpen"
     @back="
-      addContactModalOpen = false
+      addContactModalOpen = false,
       ui.openContactsModal()
     "
     @added="
-      addContactModalOpen = false
+      addContactModalOpen = false,
       ui.openContactsModal()
     "
   />
@@ -133,7 +133,7 @@ const route = useRoute()
 
 const queryClient = useQueryClient()
 const searchQuery = ref('')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 const addContactModalOpen = ref(false)
 
 const currentConversationId = computed(() => route.params.id as string | undefined)
