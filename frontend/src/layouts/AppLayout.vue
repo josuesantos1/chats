@@ -138,30 +138,34 @@ const { data: users } = useQuery({
   enabled: computed(() => !!auth.user),
 })
 
+
 const enrichedConversations = computed(() => {
   if (!conversations.value) return []
   const groupsMap = new Map((groups.value ?? []).map((g) => [g.conversation_id, g]))
   const usersMap = new Map((users.value ?? []).map((u) => [u.id, u]))
-  return conversations.value.map((conv) => {
-    let displayName = 'Conversa'
-    if (conv.type === 'group') {
-      displayName = groupsMap.get(conv.id)?.name ?? 'Grupo'
-    } else {
-      const otherId = conv.member_ids.find((id) => id !== auth.user?.id)
-      displayName = otherId ? (usersMap.get(otherId)?.name ?? 'Usuário') : 'Conversa privada'
-    }
-    const preview = conv.last_message?.content ?? ''
-    const lastMessageTime = conv.last_message
-      ? formatTime(conv.last_message.inserted_at)
-      : undefined
-    return {
-      id: conv.id,
-      type: conv.type,
-      displayName,
-      preview,
-      lastMessageTime,
-    }
-  })
+  return conversations.value
+    .map((conv) => {
+      let displayName = 'Conversa'
+      if (conv.type === 'group') {
+        displayName = groupsMap.get(conv.id)?.name ?? 'Grupo'
+      } else {
+        const otherId = conv.member_ids.find((id) => id !== auth.user?.id)
+        displayName = otherId ? (usersMap.get(otherId)?.name ?? 'Usuário') : 'Conversa privada'
+      }
+      const preview = conv.last_message?.content ?? ''
+      const lastMessageTime = conv.last_message
+        ? formatTime(conv.last_message.inserted_at)
+        : undefined
+      return {
+        id: conv.id,
+        type: conv.type,
+        displayName,
+        preview,
+        lastMessageTime,
+        _sortKey: conv.last_message?.inserted_at ?? '',
+      }
+    })
+    .sort((a, b) => b._sortKey.localeCompare(a._sortKey))
 })
 
 const filteredConversations = computed(() => {

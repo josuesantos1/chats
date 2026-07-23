@@ -100,25 +100,62 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useQuery } from '@tanstack/vue-query'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useAuthStore } from '@/store/auth'
 import { conversationsApi, groupsApi, usersApi } from '@/services/api'
-import { useConversationChannel } from '@/composables/useConversationChannel'
+import { getSocket } from '@/services/socket'
 import UserAvatar from '@/components/UserAvatar.vue'
-import type { Message } from '@/types'
+import type { Message, Conversation } from '@/types'
 
 const route = useRoute()
 const auth = useAuthStore()
+const queryClient = useQueryClient()
 const messagesContainer = ref<HTMLElement | null>(null)
 
 const conversationId = computed(() => route.params.id as string)
 const newMessage = ref('')
 const sending = ref(false)
 
-// Local messages list, seeded from HTTP then updated via socket
 const localMessages = ref<Message[]>([])
+
+let activeChannel: any = null
+
+function onNewMessage(msg: Message) {
+  if (!localMessages.value.find((m) => m.id === msg.id)) {
+    localMessages.value.push(msg)
+  }
+  queryClient.setQueryData(['conversations'], (old: Conversation[] | undefined) => {
+    if (!old) return old
+    return old.map((c) =>
+      c.id === msg.conversation_id
+        ? { ...c, last_message: { content: msg.content, inserted_at: msg.inserted_at } }
+        : c,
+    )
+  })
+}
+
+watch(
+  conversationId,
+  (newId, oldId) => {
+    if (oldId && activeChannel) {
+      activeChannel.leave()
+      activeChannel = null
+    }
+    if (!newId) return
+    const channel = getSocket().channel(`conversation:${newId}`)
+    channel.on('new_message', (payload: Message) => onNewMessage(payload))
+    channel.join().receive('error', (err) => console.error('Channel join error:', err))
+    activeChannel = channel
+  },
+  { immediate: true },
+)
+
+onUnmounted(() => {
+  activeChannel?.leave()
+  activeChannel = null
+})
 
 const { data: allConversations } = useQuery({
   queryKey: ['conversations'],
@@ -147,7 +184,6 @@ const { data: initialMessages, isPending: loadingMessages } = useQuery({
   enabled: computed(() => !!conversationId.value),
 })
 
-// Seed localMessages when HTTP response arrives
 watch(
   () => initialMessages.value,
   (msgs) => {
@@ -156,17 +192,6 @@ watch(
   { immediate: true },
 )
 
-// Set up the channel
-const { join, sendMessage } = useConversationChannel(conversationId.value, (msg: Message) => {
-  // Avoid duplicates (the sender already sees the message via broadcast)
-  if (!localMessages.value.find((m) => m.id === msg.id)) {
-    localMessages.value.push(msg)
-  }
-})
-
-onMounted(() => {
-  join()
-})
 
 const conversation = computed(() =>
   allConversations.value?.find((c) => c.id === conversationId.value),
@@ -251,18 +276,22 @@ function formatDateKey(isoString: string) {
 }
 
 async function handleSend() {
-  if (!newMessage.value.trim() || !auth.user || sending.value) return
+  if (!newMessage.value.trim() || !auth.user || sending.value || !activeChannel) return
   sending.value = true
   const content = newMessage.value.trim()
   newMessage.value = ''
   try {
-    const msg = await sendMessage({
-      content,
-      author_id: auth.user.id,
-      conversation_id: conversationId.value,
+    const msg = await new Promise<Message>((resolve, reject) => {
+      activeChannel
+        .push('send_message', {
+          content,
+          author_id: auth.user!.id,
+          conversation_id: conversationId.value,
+        })
+        .receive('ok', (m: Message) => resolve(m))
+        .receive('error', (err: unknown) => reject(err))
     })
-    // Server replied with the saved message — add it directly for the sender
-    localMessages.value.push(msg)
+    onNewMessage(msg)
   } catch {
     newMessage.value = content
   } finally {
