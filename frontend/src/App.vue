@@ -1,7 +1,4 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <HelloWorld />
+  <RouterView />
+  <Toaster position="top-right" rich-colors />
 </template>
