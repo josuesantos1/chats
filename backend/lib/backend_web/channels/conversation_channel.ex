@@ -26,15 +26,18 @@ defmodule BackendWeb.ConversationChannel do
 
     case Messages.create_message(attrs) do
       {:ok, message} ->
-        broadcast!(socket, "new_message", %{
+        payload = %{
           id: message.id,
           conversation_id: message.conversation_id,
           author_id: message.author_id,
           content: message.content,
           inserted_at: message.inserted_at
-        })
+        }
 
-        {:noreply, socket}
+        # Broadcast to everyone except the sender; sender gets the reply below
+        broadcast_from!(socket, "new_message", payload)
+
+        {:reply, {:ok, payload}, socket}
 
       {:error, changeset} ->
         {:reply, {:error, %{errors: format_errors(changeset)}}, socket}
