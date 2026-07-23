@@ -14,6 +14,7 @@ export interface Contact {
 export interface Conversation {
   id: string
   type: 'private' | 'group'
+  member_ids: string[]
 }
 
 export interface ConversationMember {

@@ -1,4 +1,8 @@
 defmodule BackendWeb.Plugs.AuthPlug do
+  @moduledoc """
+  A plug that checks for the presence of the "x-user-id" header in the request and assigns the corresponding user to the connection if found.
+  """
+
   import Plug.Conn
   import Phoenix.Controller, only: [json: 2]
 
