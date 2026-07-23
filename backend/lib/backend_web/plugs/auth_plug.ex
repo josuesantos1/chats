@@ -11,9 +11,21 @@ defmodule BackendWeb.Plugs.AuthPlug do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    case get_req_header(conn, "x-user-id") do
-      [user_id | _] ->
-        case Accounts.get_user(user_id) do
+    user_id =
+      case get_req_header(conn, "x-user-id") do
+        [id | _] -> id
+        [] -> get_req_header(conn, "authorization") |> List.first()
+      end
+
+    case user_id do
+      nil ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Missing x-user-id header"})
+        |> halt()
+
+      id ->
+        case Accounts.get_user(id) do
           nil ->
             conn
             |> put_status(:unauthorized)
@@ -23,12 +35,6 @@ defmodule BackendWeb.Plugs.AuthPlug do
           user ->
             assign(conn, :current_user, user)
         end
-
-      [] ->
-        conn
-        |> put_status(:unauthorized)
-        |> json(%{error: "Missing x-user-id header"})
-        |> halt()
     end
   end
 end
