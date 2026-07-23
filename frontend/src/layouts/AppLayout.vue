@@ -91,6 +91,12 @@
     v-if="ui.contactsModalOpen"
     @close="ui.closeContactsModal"
     @start-conversation="onStartPrivateConversation"
+    @open-add-contact="ui.closeContactsModal(); addContactModalOpen = true"
+  />
+  <AddContactModal
+    v-if="addContactModalOpen"
+    @back="addContactModalOpen = false; ui.openContactsModal()"
+    @added="addContactModalOpen = false; ui.openContactsModal()"
   />
   <NewGroupModal
     v-if="ui.newGroupModalOpen"
@@ -109,6 +115,7 @@ import { conversationsApi, groupsApi, usersApi } from '@/services/api'
 import ConversationItem from '@/components/ConversationItem.vue'
 import ContactsModal from '@/components/ContactsModal.vue'
 import NewGroupModal from '@/components/NewGroupModal.vue'
+import AddContactModal from '@/components/AddContactModal.vue'
 
 const ui = useUiStore()
 const auth = useAuthStore()
@@ -117,6 +124,8 @@ const route = useRoute()
 
 const queryClient = useQueryClient()
 const searchQuery = ref('')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const addContactModalOpen = ref(false)
 
 const currentConversationId = computed(() => route.params.id as string | undefined)
 

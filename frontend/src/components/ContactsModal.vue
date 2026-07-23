@@ -6,27 +6,37 @@
   >
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 flex flex-col max-h-[80vh]">
       <!-- Header -->
-      <div class="flex items-center justify-between px-5 pt-5 pb-4">
-        <h2 class="text-lg font-semibold text-gray-900">Contatos</h2>
-        <div class="flex items-center gap-2">
-          <button
-            class="flex items-center gap-1.5 bg-gray-900 text-white text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-gray-700 transition-colors"
-            @click="addingContact = true"
+      <div class="flex items-center justify-start px-5 pt-5 pb-4">
+        <button
+          class="text-gray-400 hover:text-gray-600 p-1 border rounded-lg"
+          @click="$emit('close')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <span class="text-base leading-none">+</span>
-            Adicionar
-          </button>
-          <button class="text-gray-400 hover:text-gray-600 p-1" @click="$emit('close')">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+            <path
+              fill-rule="evenodd"
+              d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        <div class="mx-2 flex-1">
+          <h2 class="text-lg font-semibold text-gray-900">contatos</h2>
+          <span class="text-sm text-gray-500">informe o @usuario que deseja adicionar</span>
         </div>
+        <button
+          class="flex items-center gap-1.5 text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors shrink-0"
+          @click="$emit('openAddContact')"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Novo contato
+        </button>
       </div>
 
       <!-- Add contact form -->
@@ -135,6 +145,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -147,6 +158,7 @@ import UserAvatar from './UserAvatar.vue'
 const emit = defineEmits<{
   close: []
   startConversation: [contactUserId: string]
+  openAddContact: []
 }>()
 
 const auth = useAuthStore()
