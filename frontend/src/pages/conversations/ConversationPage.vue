@@ -34,8 +34,12 @@
           @input="searchHandler"
         />
         </span>
-        <!-- Próximo (baixo) -->
-<button
+
+        <span class="text-sm text-gray-500">
+          {{ currentSearchIndex !== 0 ? currentSearchIndex + 1 : 0 }} / {{ searchCount }}
+        </span>
+
+        <button
   v-on:click="nextSearchResult"
   class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
 >
@@ -206,6 +210,8 @@ const searchQuery = ref('')
 const searchResults = ref<Message[]>([])
 const currentSearchIndex = ref(0)
 const showSearchSection = ref(false)
+const searchCount = computed(() => searchResults.value.length)
+
 
 const nextSearchResult = () => {
   if (searchResults.value.length === 0) return
