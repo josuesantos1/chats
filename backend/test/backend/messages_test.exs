@@ -25,7 +25,12 @@ defmodule Backend.MessagesTest do
     test "create_message/1 with valid data creates a message" do
       user = user_fixture()
       conversation = conversation_fixture()
-      valid_attrs = %{content: "some content", author_id: user.id, conversation_id: conversation.id}
+
+      valid_attrs = %{
+        content: "some content",
+        author_id: user.id,
+        conversation_id: conversation.id
+      }
 
       assert {:ok, %Message{} = message} = Messages.create_message(valid_attrs)
       assert message.content == "some content"

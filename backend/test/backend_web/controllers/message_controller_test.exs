@@ -12,7 +12,11 @@ defmodule BackendWeb.MessageControllerTest do
     user = user_fixture()
     conversation = conversation_fixture()
 
-    create_attrs = %{content: "some content", author_id: user.id, conversation_id: conversation.id}
+    create_attrs = %{
+      content: "some content",
+      author_id: user.id,
+      conversation_id: conversation.id
+    }
 
     {:ok, conn: put_req_header(conn, "accept", "application/json"), create_attrs: create_attrs}
   end

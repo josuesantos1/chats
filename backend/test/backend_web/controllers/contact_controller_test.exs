@@ -41,7 +41,11 @@ defmodule BackendWeb.ContactControllerTest do
   describe "update contact" do
     setup [:create_contact]
 
-    test "renders contact when data is valid", %{conn: conn, contact: %Contact{id: id} = contact, create_attrs: create_attrs} do
+    test "renders contact when data is valid", %{
+      conn: conn,
+      contact: %Contact{id: id} = contact,
+      create_attrs: create_attrs
+    } do
       conn = put(conn, ~p"/api/contacts/#{contact}", contact: create_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
     end
