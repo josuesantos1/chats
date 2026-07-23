@@ -1,23 +1,100 @@
 <template>
   <div class="flex flex-col h-full">
     <!-- Header -->
-    <div class="flex items-center gap-3 px-5 py-3 border-b border-gray-200 shrink-0">
-      <UserAvatar :name="conversationName" size="md" />
-      <div class="flex-1 min-w-0">
-        <h2 class="font-semibold text-gray-900 text-sm">{{ conversationName }}</h2>
-        <p class="text-xs text-gray-400 truncate">{{ subtitle }}</p>
-      </div>
-      <button class="text-gray-400 hover:text-gray-600 p-1">
+    <template v-if="showSearchSection">
+      <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0">
+        <button
+          class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
+          v-on:click="cancelSearch = true; searchQuery = ''; showSearchSection = false"
+        >
+          <!-- Cancel search icon -->
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <span class="flex flex-1 flex-row text-sm px-4 mx-3 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-400">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </button>
-    </div>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        <input
+          type="text"
+          placeholder="Pesquisar mensagens..."
+          class="w-full text-sm bg-gray-50 mx-2 rounded-xl focus:outline-none"
+          v-model="searchQuery"
+          @input="searchHandler"
+        />
+        </span>
+        <!-- Próximo (baixo) -->
+<button
+  v-on:click="nextSearchResult"
+  class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
+>
+  <svg
+    class="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M5 15l7-7 7 7"
+    />
+  </svg>
+</button>
+
+<button
+  v-on:click="prevSearchResult"
+  class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
+>
+  <svg
+    class="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M19 9l-7 7-7-7"
+    />
+  </svg>
+</button>
+      </div>
+    </template>
+    <template v-else>
+      <div class="flex items-center gap-3 px-5 py-3 border-b border-gray-200 shrink-0">
+        <UserAvatar :name="conversationName" size="md" />
+        <div class="flex-1 min-w-0">
+          <h2 class="font-semibold text-gray-900 text-sm">{{ conversationName }}</h2>
+          <p class="text-xs text-gray-400 truncate">{{ subtitle }}</p>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600 p-1"
+        v-on:click="searchHandler">
+          <!-- Search icon -->
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </button>
+      </div>
+    </template>
 
     <!-- Messages -->
     <div ref="messagesContainer" class="flex-1 overflow-y-auto px-6 py-4 space-y-1.5">
@@ -123,6 +200,34 @@ const newMessage = ref('')
 const sending = ref(false)
 
 const localMessages = ref<Message[]>([])
+
+const cancelSearch = ref(false)
+const searchQuery = ref('')
+const searchResults = ref<Message[]>([])
+const currentSearchIndex = ref(0)
+const showSearchSection = ref(false)
+
+const nextSearchResult = () => {
+  if (searchResults.value.length === 0) return
+  currentSearchIndex.value = (currentSearchIndex.value + 1) % searchResults.value.length
+  scrollToSearchResult()
+}
+const prevSearchResult = () => {
+  if (searchResults.value.length === 0) return
+  currentSearchIndex.value =
+    (currentSearchIndex.value - 1 + searchResults.value.length) % searchResults.value.length
+  scrollToSearchResult()
+}
+const scrollToSearchResult = () => {
+  if (searchResults.value.length === 0 || !messagesContainer.value) return
+  const msg = searchResults.value[currentSearchIndex.value]
+  const msgElement = messagesContainer.value.querySelector(`[data-message-id="${msg.id}"]`) as HTMLElement | null
+  if (msgElement) {
+    msgElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    msgElement.classList.add('bg-yellow-100')
+    setTimeout(() => msgElement.classList.remove('bg-yellow-100'), 2000)
+  }
+}
 
 let activeChannel: any = null
 
@@ -300,6 +405,10 @@ async function handleSend() {
   } finally {
     sending.value = false
   }
+}
+
+async function searchHandler() {
+  showSearchSection.value = true
 }
 
 watch(
