@@ -20,7 +20,7 @@
     </div>
 
     <!-- Messages -->
-    <div ref="messagesContainer" class="flex-1 overflow-y-auto px-6 py-4">
+    <div ref="messagesContainer" class="flex-1 overflow-y-auto px-6 py-4 space-y-1.5">
       <template v-if="loadingMessages">
         <div class="text-sm text-gray-400 text-center py-8">Carregando mensagens...</div>
       </template>
@@ -39,6 +39,7 @@
           <!-- Messages in group -->
           <template v-for="msg in group.messages" :key="msg.id">
             <!-- Sent message -->
+             <div class="w-full/2 max-w-[800px] mx-auto">
             <div v-if="msg.isMine" class="flex justify-end mb-2">
               <div class="max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5">
                 <div class="">
@@ -72,6 +73,7 @@
                 </div>
               </div>
             </div>
+             </div>
           </template>
         </template>
       </template>
@@ -83,7 +85,7 @@
         v-model="newMessage"
         type="text"
         placeholder="Escreva uma mensagem..."
-        class="flex-1 text-sm px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-0"
+        class="flex-1 text-sm px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200"
         @keyup.enter="handleSend"
       />
       <button
