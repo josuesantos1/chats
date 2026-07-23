@@ -7,6 +7,7 @@ defmodule Backend.Conversations do
   alias Backend.Repo
 
   alias Backend.Conversations.Conversation
+  alias Backend.Conversations.ConversationMember
 
   @doc """
   Returns the list of conversations.
@@ -19,6 +20,18 @@ defmodule Backend.Conversations do
   """
   def list_conversations do
     Repo.all(Conversation)
+  end
+
+  def list_conversation_members(conversation_id) do
+    ConversationMember
+    |> where([cm], cm.conversation_id == ^conversation_id)
+    |> Repo.all()
+  end
+
+  def add_conversation_member(attrs) do
+    %ConversationMember{}
+    |> ConversationMember.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """

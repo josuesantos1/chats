@@ -17,7 +17,9 @@ defmodule BackendWeb.ContactJSON do
 
   defp data(%Contact{} = contact) do
     %{
-      id: contact.id
+      id: contact.id,
+      user_id: contact.user_id,
+      contact_id: contact.contact_id
     }
   end
 end

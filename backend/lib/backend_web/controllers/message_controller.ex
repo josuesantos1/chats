@@ -11,6 +11,11 @@ defmodule BackendWeb.MessageController do
     render(conn, :index, messages: messages)
   end
 
+  def by_conversation(conn, %{"conversation_id" => conversation_id}) do
+    messages = Messages.list_messages_by_conversation(conversation_id)
+    render(conn, :index, messages: messages)
+  end
+
   def create(conn, %{"message" => message_params}) do
     with {:ok, %Message{} = message} <- Messages.create_message(message_params) do
       conn

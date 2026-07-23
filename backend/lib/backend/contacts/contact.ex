@@ -17,5 +17,7 @@ defmodule Backend.Contacts.Contact do
     contact
     |> cast(attrs, [:user_id, :contact_id])
     |> validate_required([:user_id, :contact_id])
+    |> foreign_key_constraint(:user_id)
+    |> foreign_key_constraint(:contact_id)
   end
 end

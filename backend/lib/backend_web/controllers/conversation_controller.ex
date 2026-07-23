@@ -42,4 +42,18 @@ defmodule BackendWeb.ConversationController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def members(conn, %{"conversation_id" => conversation_id}) do
+    members = Conversations.list_conversation_members(conversation_id)
+    render(conn, :members, members: members)
+  end
+
+  def add_member(conn, %{"conversation_id" => conversation_id, "member" => member_params}) do
+    attrs = Map.put(member_params, "conversation_id", conversation_id)
+
+    with {:ok, _member} <- Conversations.add_conversation_member(attrs) do
+      members = Conversations.list_conversation_members(conversation_id)
+      render(conn, :members, members: members)
+    end
+  end
 end

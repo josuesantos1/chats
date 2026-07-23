@@ -45,6 +45,10 @@ defmodule BackendWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
+  plug CORSPlug,
+    origin: ["http://localhost:5173"],
+    headers: ["Authorization", "Content-Type", "Accept", "Origin", "x-user-id"]
+
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],

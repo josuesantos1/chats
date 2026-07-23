@@ -21,6 +21,13 @@ defmodule Backend.Messages do
     Repo.all(Message)
   end
 
+  def list_messages_by_conversation(conversation_id) do
+    Message
+    |> where([m], m.conversation_id == ^conversation_id)
+    |> order_by([m], asc: m.inserted_at)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single message.
 

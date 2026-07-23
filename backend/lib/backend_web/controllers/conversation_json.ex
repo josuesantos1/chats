@@ -15,6 +15,10 @@ defmodule BackendWeb.ConversationJSON do
     %{data: data(conversation)}
   end
 
+  def members(%{members: members}) do
+    %{data: for(m <- members, do: %{user_id: m.user_id})}
+  end
+
   defp data(%Conversation{} = conversation) do
     %{
       id: conversation.id,
