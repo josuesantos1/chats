@@ -6,29 +6,69 @@
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4">
       <!-- Header -->
       <div class="flex items-center justify-between px-5 pt-5 pb-4">
-        <h2 class="text-lg font-semibold text-gray-900">Novo grupo</h2>
-        <button class="text-gray-400 hover:text-gray-600 p-1" @click="$emit('close')">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button
+          class="text-gray-400 hover:text-gray-600 p-1 border rounded-lg"
+          @click="$emit('close')"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
+              fill-rule="evenodd"
+              d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+              clip-rule="evenodd"
             />
           </svg>
         </button>
+        <h2 class="text-lg font-semibold text-gray-900">Novo grupo</h2>
       </div>
 
       <div class="px-5 pb-5 space-y-4">
         <!-- Group name -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nome do grupo</label>
-          <input
-            v-model="groupName"
-            type="text"
-            placeholder="Ex: Time de Produto"
-            class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
-          />
+          <div class="flex flex-row items-center gap-2">
+            <span class="border rounded-lg mx-1 p-1">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <!-- Pessoa principal -->
+                <circle cx="9" cy="8" r="3" stroke="#9CA3AF" stroke-width="1.8" />
+
+                <path
+                  d="M3.5 18C3.5 15.8 5.9 14 9 14C12.1 14 14.5 15.8 14.5 18"
+                  stroke="#9CA3AF"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  fill="none"
+                />
+
+                <!-- Pessoa secundária -->
+                <circle cx="17" cy="9" r="2.3" stroke="#9CA3AF" stroke-width="1.8" />
+
+                <path
+                  d="M14.8 18C14.8 16.3 16.6 15 19 15C20.8 15 22.2 15.8 23 17"
+                  stroke="#9CA3AF"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  fill="none"
+                />
+              </svg>
+            </span>
+            <input
+              v-model="groupName"
+              type="text"
+              placeholder="Ex: Time de Produto"
+              class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+            />
+          </div>
         </div>
 
         <!-- Members -->
@@ -63,9 +103,21 @@
               :key="m.id"
               class="flex items-center gap-1 bg-gray-100 rounded-full px-2 py-1 text-xs"
             >
+              <UserAvatar :name="m.name" size="sm" />
               {{ m.name }}
-              <button class="text-gray-400 hover:text-gray-700" @click="removeMember(m.id)">
-                ×
+              <button class="text-gray-400 hover:text-gray-700 px-1" @click="removeMember(m.id)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
               </button>
             </div>
           </div>
@@ -84,6 +136,11 @@
                 <p class="text-sm text-gray-900">{{ contact.name }}</p>
                 <p class="text-xs text-gray-400">@{{ contact.username }}</p>
               </div>
+              <input
+                type="checkbox"
+                class="ml-auto h-4 w-4 border-blue-100 accent-zinc-900"
+                :checked="isSelected(contact.id)"
+              />
             </div>
             <div
               v-if="filteredContacts.length === 0"
