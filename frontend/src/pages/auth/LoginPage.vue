@@ -38,7 +38,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
-import { usersApi } from '@/services/api'
+import { sessionsApi } from '@/services/api'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -51,16 +51,11 @@ async function onSubmit() {
   loading.value = true
   error.value = ''
   try {
-    const users = await usersApi.list()
-    const found = users.find((u) => u.username === username.value)
-    if (!found) {
-      error.value = 'User not found.'
-      return
-    }
-    auth.setUser(found)
+    const user = await sessionsApi.login(username.value)
+    auth.setUser(user)
     router.push('/')
   } catch {
-    error.value = 'Something went wrong. Try again.'
+    error.value = 'User not found.'
   } finally {
     loading.value = false
   }

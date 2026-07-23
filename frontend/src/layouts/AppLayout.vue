@@ -104,7 +104,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useUiStore } from '@/store/ui'
 import { useAuthStore } from '@/store/auth'
-import { conversationsApi, groupsApi } from '@/services/api'
+import { conversationsApi, groupsApi, usersApi } from '@/services/api'
 import ConversationItem from '@/components/ConversationItem.vue'
 import ContactsModal from '@/components/ContactsModal.vue'
 import NewGroupModal from '@/components/NewGroupModal.vue'
@@ -131,16 +131,23 @@ const { data: groups } = useQuery({
   enabled: computed(() => !!auth.user),
 })
 
+const { data: users } = useQuery({
+  queryKey: ['users'],
+  queryFn: () => usersApi.list(),
+  enabled: computed(() => !!auth.user),
+})
+
 const enrichedConversations = computed(() => {
   if (!conversations.value) return []
   const groupsMap = new Map((groups.value ?? []).map((g) => [g.conversation_id, g]))
+  const usersMap = new Map((users.value ?? []).map((u) => [u.id, u]))
   return conversations.value.map((conv) => {
     let displayName = 'Conversa'
     if (conv.type === 'group') {
-      const group = groupsMap.get(conv.id)
-      displayName = group?.name ?? 'Grupo'
+      displayName = groupsMap.get(conv.id)?.name ?? 'Grupo'
     } else {
-      displayName = 'Conversa privada'
+      const otherId = conv.member_ids.find((id) => id !== auth.user?.id)
+      displayName = otherId ? (usersMap.get(otherId)?.name ?? 'Usuário') : 'Conversa privada'
     }
     return {
       id: conv.id,

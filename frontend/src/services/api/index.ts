@@ -1,4 +1,5 @@
 export { api } from './client'
+export { sessionsApi } from './sessions'
 export { usersApi } from './users'
 export { contactsApi } from './contacts'
 export { conversationsApi } from './conversations'
