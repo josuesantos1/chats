@@ -5,7 +5,7 @@
   >
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4">
       <!-- Header -->
-      <div class="flex items-center justify-between px-5 pt-5 pb-4">
+      <div class="flex items-center justify-start px-5 pt-5 pb-4">
         <button
           class="text-gray-400 hover:text-gray-600 p-1 border rounded-lg"
           @click="$emit('close')"
@@ -23,7 +23,13 @@
             />
           </svg>
         </button>
-        <h2 class="text-lg font-semibold text-gray-900">Novo grupo</h2>
+        <div class="mx-2">
+          <h2 class="text-lg font-semibold text-gray-900">Novo grupo</h2>
+          <span class="text-sm text-gray-500"
+            >{{ selectedMembers.length }} de {{ filteredContacts.length }} contatos
+            selecionados</span
+          >
+        </div>
       </div>
 
       <div class="px-5 pb-5 space-y-4">
@@ -161,7 +167,7 @@
             Cancelar
           </button>
           <button
-            class="flex-1 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50"
+            class="flex-1 py-2 bg-zinc-900 opacity-100 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
             :disabled="loading || !groupName.trim() || selectedMembers.length === 0"
             @click="handleCreate"
           >

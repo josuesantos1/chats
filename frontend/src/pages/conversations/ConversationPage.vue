@@ -5,11 +5,7 @@
       <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0">
         <button
           class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
-          v-on:click="
-            cancelSearch = true,
-            searchQuery = '',
-            showSearchSection = false
-          "
+          v-on:click="((cancelSearch = true), (searchQuery = ''), (showSearchSection = false))"
         >
           <!-- Cancel search icon -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
