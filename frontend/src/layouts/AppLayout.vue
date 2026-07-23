@@ -91,12 +91,21 @@
     v-if="ui.contactsModalOpen"
     @close="ui.closeContactsModal"
     @start-conversation="onStartPrivateConversation"
-    @open-add-contact="ui.closeContactsModal(); addContactModalOpen = true"
+    @open-add-contact="
+      ui.closeContactsModal()
+      addContactModalOpen = true
+    "
   />
   <AddContactModal
     v-if="addContactModalOpen"
-    @back="addContactModalOpen = false; ui.openContactsModal()"
-    @added="addContactModalOpen = false; ui.openContactsModal()"
+    @back="
+      addContactModalOpen = false
+      ui.openContactsModal()
+    "
+    @added="
+      addContactModalOpen = false
+      ui.openContactsModal()
+    "
   />
   <NewGroupModal
     v-if="ui.newGroupModalOpen"
