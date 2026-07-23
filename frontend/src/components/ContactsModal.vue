@@ -48,10 +48,7 @@
           </button>
           <button
             class="text-sm px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            @click="
-              addingContact = false,
-              searchUsername = ''
-            "
+            @click="((addingContact = false), (searchUsername = ''))"
           >
             Cancelar
           </button>
