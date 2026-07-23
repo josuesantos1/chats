@@ -5,7 +5,11 @@
       <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0">
         <button
           class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
-          v-on:click="cancelSearch = true; searchQuery = ''; showSearchSection = false"
+          v-on:click="
+            cancelSearch = true
+            searchQuery = ''
+            showSearchSection = false
+          "
         >
           <!-- Cancel search icon -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,8 +21,10 @@
             />
           </svg>
         </button>
-        <span class="flex flex-1 flex-row text-sm px-4 mx-3 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span
+          class="flex flex-1 flex-row text-sm px-4 mx-3 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-400"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -26,13 +32,13 @@
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-        <input
-          type="text"
-          placeholder="Pesquisar mensagens..."
-          class="w-full text-sm bg-gray-50 mx-2 rounded-xl focus:outline-none"
-          v-model="searchQuery"
-          @input="searchHandler"
-        />
+          <input
+            type="text"
+            placeholder="Pesquisar mensagens..."
+            class="w-full text-sm bg-gray-50 mx-2 rounded-xl focus:outline-none"
+            v-model="searchQuery"
+            @input="searchHandler"
+          />
         </span>
 
         <span class="text-sm text-gray-500">
@@ -40,42 +46,32 @@
         </span>
 
         <button
-  v-on:click="nextSearchResult"
-  class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
->
-  <svg
-    class="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M5 15l7-7 7 7"
-    />
-  </svg>
-</button>
+          v-on:click="nextSearchResult"
+          class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            />
+          </svg>
+        </button>
 
-<button
-  v-on:click="prevSearchResult"
-  class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
->
-  <svg
-    class="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M19 9l-7 7-7-7"
-    />
-  </svg>
-</button>
+        <button
+          v-on:click="prevSearchResult"
+          class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
       </div>
     </template>
     <template v-else>
@@ -85,8 +81,7 @@
           <h2 class="font-semibold text-gray-900 text-sm">{{ conversationName }}</h2>
           <p class="text-xs text-gray-400 truncate">{{ subtitle }}</p>
         </div>
-        <button class="text-gray-400 hover:text-gray-600 p-1"
-        v-on:click="searchHandler">
+        <button class="text-gray-400 hover:text-gray-600 p-1" v-on:click="searchHandler">
           <!-- Search icon -->
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -120,13 +115,16 @@
           <!-- Messages in group -->
           <template v-for="msg in group.messages" :key="msg.id">
             <!-- Sent message -->
-            <div class="w-full/2 max-w-[800px] mx-auto">
+            <div class="w-full/2 max-w-[800px] mx-auto" :data-message-id="msg.id">
               <div v-if="msg.isMine" class="flex justify-end mb-2">
                 <div
-                  :class="['max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5', highlightedMessageId === msg.id ? 'border-2 border-yellow-500' : '']"
+                  :class="[
+                    'max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 border-2',
+                    highlightedMessageId === msg.id ? 'border-yellow-500' : 'border-zinc-900',
+                  ]"
                 >
                   <div class="">
-                    <p class="text-sm leading-relaxed">{{ msg.content }}</p>
+                    <p class="text-sm leading-relaxed" v-html="highlightContent(msg.content)" />
                   </div>
                   <p class="text-xs text-gray-400 mt-0.5 text-right pr-1">{{ msg.time }}</p>
                 </div>
@@ -140,7 +138,10 @@
                   size="sm"
                 />
                 <div
-                  :class="['max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5', highlightedMessageId === msg.id ? 'border-2 border-yellow-500' : '']"
+                  :class="[
+                    'max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5 border-2',
+                    highlightedMessageId === msg.id ? 'border-yellow-500' : 'border-gray-100',
+                  ]"
                 >
                   <p
                     v-if="conversation?.type === 'group'"
@@ -149,7 +150,10 @@
                     {{ msg.authorName }}
                   </p>
                   <div class="">
-                    <p class="text-sm leading-relaxed text-gray-900">{{ msg.content }}</p>
+                    <p
+                      class="text-sm leading-relaxed text-gray-900"
+                      v-html="highlightContent(msg.content)"
+                    />
                   </div>
                   <div class="flex justify-end">
                     <p class="text-xs text-gray-400 mt-0.5 pr-1">{{ msg.time }}</p>
@@ -214,7 +218,7 @@ const highlightedMessageId = ref<string | null>(null)
 const searchResults = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
   if (!q) return []
-  return localMessages.value.filter((m) => m.content.toLowerCase().includes(q))
+  return localMessages.value.filter((m) => m.content.toLowerCase().includes(q)).reverse()
 })
 
 const searchCount = computed(() => searchResults.value.length)
@@ -234,7 +238,9 @@ const scrollToSearchResult = () => {
   if (searchResults.value.length === 0 || !messagesContainer.value) return
   const msg = searchResults.value[currentSearchIndex.value]
   highlightedMessageId.value = msg.id
-  const msgElement = messagesContainer.value.querySelector(`[data-message-id="${msg.id}"]`) as HTMLElement | null
+  const msgElement = messagesContainer.value.querySelector(
+    `[data-message-id="${msg.id}"]`,
+  ) as HTMLElement | null
   if (msgElement) {
     msgElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
@@ -426,6 +432,27 @@ async function handleSend() {
 
 function searchHandler() {
   showSearchSection.value = true
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+function highlightContent(content: string): string {
+  const q = searchQuery.value.trim()
+  const escaped = escapeHtml(content)
+  if (!q) return escaped
+  const escapedQ = escapeHtml(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`\\w*${escapedQ}\\w*`, 'gi')
+  return escaped.replace(
+    regex,
+    '<mark class="bg-yellow-300 text-zinc-900 rounded px-0.5">$&</mark>',
+  )
 }
 
 watch(
