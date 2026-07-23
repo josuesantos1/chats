@@ -3,12 +3,15 @@ defmodule BackendWeb.ConversationController do
 
   alias Backend.Conversations
   alias Backend.Conversations.Conversation
+  alias Backend.Messages
 
   action_fallback BackendWeb.FallbackController
 
   def index(conn, _params) do
     conversations = Conversations.list_conversations_for_user(conn.assigns.current_user.id)
-    render(conn, :index, conversations: conversations)
+    ids = Enum.map(conversations, & &1.id)
+    last_messages = Messages.get_last_messages(ids) |> Map.new(&{&1.conversation_id, &1})
+    render(conn, :index, conversations: conversations, last_messages: last_messages)
   end
 
   def create(conn, %{"conversation" => conversation_params}) do

@@ -67,7 +67,8 @@
         <template v-else-if="filteredConversations.length === 0">
           <div class="text-sm text-gray-400 text-center py-8">Nenhuma conversa</div>
         </template>
-        <ConversationItem
+        <!--  ConversationItem component for each conversation -->
+        <ConversationItem 
           v-for="item in filteredConversations"
           :key="item.id"
           :display-name="item.displayName"
@@ -149,12 +150,16 @@ const enrichedConversations = computed(() => {
       const otherId = conv.member_ids.find((id) => id !== auth.user?.id)
       displayName = otherId ? (usersMap.get(otherId)?.name ?? 'Usuário') : 'Conversa privada'
     }
+    const preview = conv.last_message?.content ?? ''
+    const lastMessageTime = conv.last_message
+      ? formatTime(conv.last_message.inserted_at)
+      : undefined
     return {
       id: conv.id,
       type: conv.type,
       displayName,
-      preview: '',
-      lastMessageTime: undefined as string | undefined,
+      preview,
+      lastMessageTime,
     }
   })
 })
@@ -164,6 +169,14 @@ const filteredConversations = computed(() => {
   const q = searchQuery.value.toLowerCase()
   return enrichedConversations.value.filter((c) => c.displayName.toLowerCase().includes(q))
 })
+
+function formatTime(isoString: string) {
+  try {
+    return new Date(isoString).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+  } catch {
+    return ''
+  }
+}
 
 function selectConversation(id: string) {
   router.push({ name: 'conversation', params: { id } })

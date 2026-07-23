@@ -15,6 +15,7 @@ export interface Conversation {
   id: string
   type: 'private' | 'group'
   member_ids: string[]
+  last_message: { content: string; inserted_at: string } | null
 }
 
 export interface ConversationMember {

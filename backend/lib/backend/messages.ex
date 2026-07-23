@@ -28,6 +28,16 @@ defmodule Backend.Messages do
     |> Repo.all()
   end
 
+  def get_last_messages(conversation_ids) when conversation_ids == [], do: []
+
+  def get_last_messages(conversation_ids) do
+    Message
+    |> where([m], m.conversation_id in ^conversation_ids)
+    |> distinct([m], m.conversation_id)
+    |> order_by([m], asc: m.conversation_id, desc: m.inserted_at)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single message.
 
