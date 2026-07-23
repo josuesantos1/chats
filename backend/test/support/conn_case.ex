@@ -33,6 +33,14 @@ defmodule BackendWeb.ConnCase do
 
   setup tags do
     Backend.DataCase.setup_sandbox(tags)
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+
+    user = Backend.AccountsFixtures.user_fixture(%{email: "test@conn.com", username: "conn_user"})
+
+    conn =
+      Phoenix.ConnTest.build_conn()
+      |> Plug.Conn.put_req_header("x-user-id", user.id)
+      |> Plug.Conn.put_req_header("authorization", user.id)
+
+    {:ok, conn: conn, current_user: user}
   end
 end

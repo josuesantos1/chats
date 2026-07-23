@@ -23,9 +23,10 @@ defmodule BackendWeb.UserControllerTest do
   end
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
+    test "lists all users", %{conn: conn, current_user: current_user} do
       conn = get(conn, ~p"/api/users")
-      assert json_response(conn, 200)["data"] == []
+      data = json_response(conn, 200)["data"]
+      assert Enum.any?(data, &(&1["id"] == current_user.id))
     end
   end
 
