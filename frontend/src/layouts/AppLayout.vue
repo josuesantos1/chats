@@ -68,7 +68,7 @@
           <div class="text-sm text-gray-400 text-center py-8">Nenhuma conversa</div>
         </template>
         <!--  ConversationItem component for each conversation -->
-        <ConversationItem 
+        <ConversationItem
           v-for="item in filteredConversations"
           :key="item.id"
           :display-name="item.displayName"
@@ -138,7 +138,6 @@ const { data: users } = useQuery({
   enabled: computed(() => !!auth.user),
 })
 
-
 const enrichedConversations = computed(() => {
   if (!conversations.value) return []
   const groupsMap = new Map((groups.value ?? []).map((g) => [g.conversation_id, g]))
@@ -174,12 +173,32 @@ const filteredConversations = computed(() => {
   return enrichedConversations.value.filter((c) => c.displayName.toLowerCase().includes(q))
 })
 
-function formatTime(isoString: string) {
-  try {
-    return new Date(isoString).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-  } catch {
+function formatTime(isoString: string): string {
+  const date = new Date(isoString)
+
+  if (Number.isNaN(date.getTime())) {
     return ''
   }
+
+  const today = new Date()
+  const yesterday = new Date(today)
+  yesterday.setDate(today.getDate() - 1)
+
+  if (date.toDateString() === today.toDateString()) {
+    return date.toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  }
+
+  if (date.toDateString() === yesterday.toDateString()) {
+    return 'Ontem'
+  }
+
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+  })
 }
 
 function selectConversation(id: string) {

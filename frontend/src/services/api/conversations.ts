@@ -2,8 +2,7 @@ import { api } from './client'
 import type { Conversation, ConversationMember, Message } from '@/types'
 
 export const conversationsApi = {
-  list: () =>
-    api.get<{ data: Conversation[] }>('/conversations').then((r) => r.data.data),
+  list: () => api.get<{ data: Conversation[] }>('/conversations').then((r) => r.data.data),
   create: (payload: { type: 'private' | 'group' }) =>
     api
       .post<{ data: Conversation }>('/conversations', { conversation: payload })

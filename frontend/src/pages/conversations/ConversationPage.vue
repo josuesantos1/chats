@@ -39,41 +39,43 @@
           <!-- Messages in group -->
           <template v-for="msg in group.messages" :key="msg.id">
             <!-- Sent message -->
-             <div class="w-full/2 max-w-[800px] mx-auto">
-            <div v-if="msg.isMine" class="flex justify-end mb-2">
-              <div class="max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5">
-                <div class="">
-                  <p class="text-sm leading-relaxed">{{ msg.content }}</p>
-                </div>
-                <p class="text-xs text-gray-400 mt-0.5 text-right pr-1">{{ msg.time }}</p>
-              </div>
-            </div>
-
-            <!-- Received message -->
-            <div v-else class="flex items-end gap-2 mb-2">
-              <UserAvatar
-                v-if="conversation?.type === 'group'"
-                :name="msg.authorName"
-                size="sm"
-              />
-              <div class="max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5">
-                <p
-                  v-if="conversation?.type === 'group'"
-                  class="text-xs font-medium text-gray-600 mb-1 ml-1"
-                >
-                  {{ msg.authorName }}
-                </p>
+            <div class="w-full/2 max-w-[800px] mx-auto">
+              <div v-if="msg.isMine" class="flex justify-end mb-2">
                 <div
-                  class=""
+                  class="max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5"
                 >
-                  <p class="text-sm leading-relaxed text-gray-900">{{ msg.content }}</p>
+                  <div class="">
+                    <p class="text-sm leading-relaxed">{{ msg.content }}</p>
+                  </div>
+                  <p class="text-xs text-gray-400 mt-0.5 text-right pr-1">{{ msg.time }}</p>
                 </div>
-                <div class="flex justify-end">
-                  <p class="text-xs text-gray-400 mt-0.5 pr-1">{{ msg.time }}</p>
+              </div>
+
+              <!-- Received message -->
+              <div v-else class="flex items-end gap-2 mb-2">
+                <UserAvatar
+                  v-if="conversation?.type === 'group'"
+                  :name="msg.authorName"
+                  size="sm"
+                />
+                <div
+                  class="max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5"
+                >
+                  <p
+                    v-if="conversation?.type === 'group'"
+                    class="text-xs font-medium text-gray-600 mb-1 ml-1"
+                  >
+                    {{ msg.authorName }}
+                  </p>
+                  <div class="">
+                    <p class="text-sm leading-relaxed text-gray-900">{{ msg.content }}</p>
+                  </div>
+                  <div class="flex justify-end">
+                    <p class="text-xs text-gray-400 mt-0.5 pr-1">{{ msg.time }}</p>
+                  </div>
                 </div>
               </div>
             </div>
-             </div>
           </template>
         </template>
       </template>
@@ -194,7 +196,6 @@ watch(
   { immediate: true },
 )
 
-
 const conversation = computed(() =>
   allConversations.value?.find((c) => c.id === conversationId.value),
 )
@@ -222,7 +223,7 @@ const subtitle = computed(() => {
       .slice(0, 3)
       .map((m) => {
         const u = usersMap.value.get(m.user_id)
-        return m.user_id === auth.user?.id ? 'Você' : u?.name?.split(' ')[0] ?? ''
+        return m.user_id === auth.user?.id ? 'Você' : (u?.name?.split(' ')[0] ?? '')
       })
       .filter(Boolean)
     const extra = memberCount > 3 ? ` +${memberCount - 3}` : ''

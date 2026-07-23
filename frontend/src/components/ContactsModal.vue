@@ -16,12 +16,14 @@
             <span class="text-base leading-none">+</span>
             Adicionar
           </button>
-          <button
-            class="text-gray-400 hover:text-gray-600 p-1"
-            @click="$emit('close')"
-          >
+          <button class="text-gray-400 hover:text-gray-600 p-1" @click="$emit('close')">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -46,7 +48,10 @@
           </button>
           <button
             class="text-sm px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            @click="addingContact = false; searchUsername = ''"
+            @click="
+              addingContact = false
+              searchUsername = ''
+            "
           >
             Cancelar
           </button>
@@ -175,7 +180,9 @@ const myContacts = computed(() => {
     .filter((c) => c.user_id === auth.user!.id)
     .map((c) => {
       const user = usersMap.get(c.contact_id)
-      return user ? { id: user.id, name: user.name, username: user.username, contactId: c.id } : null
+      return user
+        ? { id: user.id, name: user.name, username: user.username, contactId: c.id }
+        : null
     })
     .filter(Boolean) as { id: string; name: string; username: string; contactId: string }[]
 })
@@ -209,7 +216,7 @@ async function handleAddContact() {
   addLoading.value = true
   try {
     const allUsers = users.value ?? []
-  console.log('Adding contact:', users.value, searchUsername.value.trim(), auth.user.id)
+    console.log('Adding contact:', users.value, searchUsername.value.trim(), auth.user.id)
     const target = allUsers.find((u) => u.username === searchUsername.value.trim())
     if (!target) {
       addError.value = 'Usuário não encontrado.'
