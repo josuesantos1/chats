@@ -36,7 +36,7 @@
         </span>
 
         <span class="text-sm text-gray-500">
-          {{ currentSearchIndex !== 0 ? currentSearchIndex + 1 : 0 }} / {{ searchCount }}
+          {{ searchCount !== 0 ? currentSearchIndex + 1 : 0 }} / {{ searchCount }}
         </span>
 
         <button
@@ -123,7 +123,7 @@
             <div class="w-full/2 max-w-[800px] mx-auto">
               <div v-if="msg.isMine" class="flex justify-end mb-2">
                 <div
-                  class="max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5"
+                  :class="['max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5', highlightedMessageId === msg.id ? 'border-2 border-yellow-500' : '']"
                 >
                   <div class="">
                     <p class="text-sm leading-relaxed">{{ msg.content }}</p>
@@ -140,7 +140,7 @@
                   size="sm"
                 />
                 <div
-                  class="max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5"
+                  :class="['max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5', highlightedMessageId === msg.id ? 'border-2 border-yellow-500' : '']"
                 >
                   <p
                     v-if="conversation?.type === 'group'"
@@ -207,11 +207,17 @@ const localMessages = ref<Message[]>([])
 
 const cancelSearch = ref(false)
 const searchQuery = ref('')
-const searchResults = ref<Message[]>([])
 const currentSearchIndex = ref(0)
 const showSearchSection = ref(false)
-const searchCount = computed(() => searchResults.value.length)
+const highlightedMessageId = ref<string | null>(null)
 
+const searchResults = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return []
+  return localMessages.value.filter((m) => m.content.toLowerCase().includes(q))
+})
+
+const searchCount = computed(() => searchResults.value.length)
 
 const nextSearchResult = () => {
   if (searchResults.value.length === 0) return
@@ -227,13 +233,18 @@ const prevSearchResult = () => {
 const scrollToSearchResult = () => {
   if (searchResults.value.length === 0 || !messagesContainer.value) return
   const msg = searchResults.value[currentSearchIndex.value]
+  highlightedMessageId.value = msg.id
   const msgElement = messagesContainer.value.querySelector(`[data-message-id="${msg.id}"]`) as HTMLElement | null
   if (msgElement) {
     msgElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    msgElement.classList.add('bg-yellow-100')
-    setTimeout(() => msgElement.classList.remove('bg-yellow-100'), 2000)
   }
 }
+
+watch(searchQuery, () => {
+  currentSearchIndex.value = 0
+  highlightedMessageId.value = null
+  if (searchResults.value.length > 0) scrollToSearchResult()
+})
 
 let activeChannel: any = null
 
@@ -413,7 +424,7 @@ async function handleSend() {
   }
 }
 
-async function searchHandler() {
+function searchHandler() {
   showSearchSection.value = true
 }
 
