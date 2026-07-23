@@ -6,8 +6,8 @@
         <button
           class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
           v-on:click="
-            cancelSearch = true
-            searchQuery = ''
+            cancelSearch = true,
+            searchQuery = '',
             showSearchSection = false
           "
         >
@@ -121,6 +121,7 @@
                   :class="[
                     'max-w-[65%] bg-zinc-900 text-white rounded-2xl rounded-tr-sm px-4 py-2.5 border-2',
                     highlightedMessageId === msg.id ? 'border-yellow-500' : 'border-zinc-900',
+                    highlightedMessageId !== msg.id && searchQuery ? 'opacity-50' : '',
                   ]"
                 >
                   <div class="">
@@ -136,11 +137,13 @@
                   v-if="conversation?.type === 'group'"
                   :name="msg.authorName"
                   size="sm"
+                  :class="highlightedMessageId !== msg.id && searchQuery ? 'opacity-50' : ''"
                 />
                 <div
                   :class="[
                     'max-w-[65%] bg-white shadow-sm border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-2.5 border-2',
                     highlightedMessageId === msg.id ? 'border-yellow-500' : 'border-gray-100',
+                    highlightedMessageId !== msg.id && searchQuery ? 'opacity-50' : '',
                   ]"
                 >
                   <p
