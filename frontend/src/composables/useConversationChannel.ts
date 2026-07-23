@@ -5,7 +5,7 @@ import type { Message } from '@/types'
 
 export function useConversationChannel(
   conversationId: string,
-  onNewMessage: (msg: Message) => void,
+  onNewMessage: (message: Message) => void,
 ) {
   let channel: Channel | null = null
 
@@ -13,9 +13,7 @@ export function useConversationChannel(
     const socket = getSocket()
     channel = socket.channel(`conversation:${conversationId}`)
 
-    channel.on('new_message', (payload: Message) => {
-      onNewMessage(payload)
-    })
+    channel.on('new_message', onNewMessage)
 
     channel.join().receive('error', (err) => {
       console.error('Channel join error:', err)

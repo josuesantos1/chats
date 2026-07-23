@@ -49,7 +49,7 @@
           <button
             class="text-sm px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             @click="
-              addingContact = false
+              addingContact = false,
               searchUsername = ''
             "
           >
@@ -216,7 +216,6 @@ async function handleAddContact() {
   addLoading.value = true
   try {
     const allUsers = users.value ?? []
-    console.log('Adding contact:', users.value, searchUsername.value.trim(), auth.user.id)
     const target = allUsers.find((u) => u.username === searchUsername.value.trim())
     if (!target) {
       addError.value = 'Usuário não encontrado.'

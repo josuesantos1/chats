@@ -144,13 +144,13 @@ const enrichedConversations = computed(() => {
   const usersMap = new Map((users.value ?? []).map((u) => [u.id, u]))
   return conversations.value
     .map((conv) => {
-      let displayName = 'Conversa'
-      if (conv.type === 'group') {
-        displayName = groupsMap.get(conv.id)?.name ?? 'Grupo'
-      } else {
-        const otherId = conv.member_ids.find((id) => id !== auth.user?.id)
-        displayName = otherId ? (usersMap.get(otherId)?.name ?? 'Usuário') : 'Conversa privada'
-      }
+      const displayName =
+        conv.type === 'group'
+          ? (groupsMap.get(conv.id)?.name ?? 'Grupo')
+          : (() => {
+              const otherId = conv.member_ids.find((id) => id !== auth.user?.id)
+              return otherId ? (usersMap.get(otherId)?.name ?? 'Usuário') : 'Conversa privada'
+            })()
       const preview = conv.last_message?.content ?? ''
       const lastMessageTime = conv.last_message
         ? formatTime(conv.last_message.inserted_at)
