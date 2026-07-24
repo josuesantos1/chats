@@ -106,11 +106,31 @@ usersnames = [
   "Judy",
 ]
 
+lastnames = [
+  "Silva",
+  "Souza",
+  "Costa",
+  "Oliveira",
+  "Pereira",
+  "Rodrigues",
+  "Almeida",
+  "Nascimento",
+  "Lima",
+  "Araújo",
+  "Fernandes",
+  "Carvalho",
+  "Gomes",
+  "Martins",
+  "Ribeiro",
+  "Mendes",
+  "Barbosa",
+]
+
 users =
   Enum.map(1..length(usersnames), fn i ->
     {:ok, user} =
       Accounts.create_user(%{
-        name: Enum.at(usersnames, i - 1),
+        name: Enum.at(usersnames, i - 1) <> " " <> Enum.at(lastnames, i - 1),
         username: "user#{i}",
         email: "user#{i}@example.com"
       })
