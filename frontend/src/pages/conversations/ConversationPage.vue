@@ -2,32 +2,18 @@
   <div class="flex flex-col h-full">
     <!-- Header -->
     <template v-if="showSearchSection">
-      <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0">
+      <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0"
+      >
         <button
           class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
           @click="((cancelSearch = true), (searchQuery = ''), (showSearchSection = false))"
         >
-          <!-- Cancel search icon -->
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <v-icon name="hi-x" class="w-5 h-5" />
         </button>
         <span
           class="flex flex-1 flex-row text-sm px-4 mx-3 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-400"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <v-icon name="hi-search" class="w-5 h-5" />
           <input
             v-model="searchQuery"
             type="text"
@@ -45,48 +31,26 @@
           class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
           @click="nextSearchResult"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            />
-          </svg>
+          <v-icon name="hi-chevron-up" class="w-5 h-5" />
         </button>
 
         <button
           class="ml-2 p-2 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-200 border-2 border-gray-200 text-gray-500 hover:text-gray-700"
           @click="prevSearchResult"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          <v-icon name="hi-chevron-down" class="w-5 h-5" />
         </button>
       </div>
     </template>
     <template v-else>
       <div class="flex items-center gap-3 px-5 py-3 border-b border-gray-200 shrink-0">
-        <UserAvatar :name="conversationName" size="md" />
+        <UserAvatar :name="conversationName" size="md" class="cursor-pointer" @click="openAboutModel = true" />
         <div class="flex-1 min-w-0">
           <h2 class="font-semibold text-gray-900 text-sm">{{ conversationName }}</h2>
           <p class="text-xs text-gray-400 truncate">{{ subtitle }}</p>
         </div>
         <button class="text-gray-400 hover:text-gray-600 p-1" @click="searchHandler">
-          <!-- Search icon -->
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <v-icon name="hi-search" class="w-5 h-5" />
         </button>
       </div>
     </template>
@@ -179,12 +143,16 @@
         :disabled="!newMessage.trim() || sending"
         @click="handleSend"
       >
-        <svg class="w-4 h-4 rotate-45" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-        </svg>
+        <v-icon name="md-send" class="w-4 h-4" />
       </button>
     </div>
   </div>
+
+  <AboutGroupModal
+    v-if="openAboutModel"
+    :conversation-id="conversationId"
+    @close="openAboutModel = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -195,7 +163,10 @@ import { useAuthStore } from '@/store/auth'
 import { conversationsApi, groupsApi, usersApi } from '@/services/api'
 import { getSocket } from '@/services/socket'
 import UserAvatar from '@/components/UserAvatar.vue'
+import AboutGroupModal from '@/components/AboutGroupModal.vue'
 import type { Message, Conversation } from '@/types'
+
+
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -213,6 +184,8 @@ const searchQuery = ref('')
 const currentSearchIndex = ref(0)
 const showSearchSection = ref(false)
 const highlightedMessageId = ref<string | null>(null)
+
+const openAboutModel = ref(false)
 
 const searchResults = computed(() => {
   const q = searchQuery.value.trim().toLowerCase()
@@ -288,6 +261,11 @@ onUnmounted(() => {
   activeChannel = null
 })
 
+const conversation = computed(() =>
+  allConversations.value?.find((c) => c.id === conversationId.value),
+)
+
+
 const { data: allConversations } = useQuery({
   queryKey: ['conversations'],
   queryFn: () => conversationsApi.list(),
@@ -321,10 +299,6 @@ watch(
     if (msgs) localMessages.value = [...msgs]
   },
   { immediate: true },
-)
-
-const conversation = computed(() =>
-  allConversations.value?.find((c) => c.id === conversationId.value),
 )
 
 const usersMap = computed(() => new Map((users.value ?? []).map((u) => [u.id, u])))

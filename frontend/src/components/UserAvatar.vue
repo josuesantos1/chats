@@ -13,7 +13,7 @@ import { computed } from 'vue'
 const props = withDefaults(
   defineProps<{
     name: string
-    size?: 'sm' | 'md' | 'lg'
+    size?: 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   { size: 'md' },
 )
@@ -27,6 +27,7 @@ const initials = computed(() => {
 const sizeClass = computed(() => {
   if (props.size === 'sm') return 'w-8 h-8 text-xs'
   if (props.size === 'lg') return 'w-12 h-12 text-base'
+  if (props.size === 'xl') return 'w-20 h-20 text-2xl'
   return 'w-10 h-10 text-sm'
 })
 </script>

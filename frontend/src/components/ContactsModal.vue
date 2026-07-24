@@ -11,35 +11,16 @@
           class="text-gray-400 hover:text-gray-600 p-1 border rounded-lg"
           @click="$emit('close')"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <v-icon name="hi-solid-arrow-left" class="h-5 w-5" />
         </button>
         <div class="mx-2 flex-1">
           <h2 class="text-lg font-semibold text-gray-900">contatos</h2>
-          <span class="text-sm text-gray-500">informe o @usuario que deseja adicionar</span>
         </div>
         <button
-          class="flex items-center gap-1.5 text-sm text-gray-700 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors shrink-0"
+          class="flex items-center gap-1.5 text-sm text-white bg-zinc-900 rounded-lg px-3 py-1.5 hover:bg-zinc-700 transition-colors shrink-0"
           @click="$emit('openAddContact')"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <v-icon name="hi-plus" class="w-4 h-4" />
           Novo contato
         </button>
       </div>
@@ -74,19 +55,7 @@
       <!-- Search -->
       <div class="px-5 pb-3">
         <div class="relative">
-          <svg
-            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <v-icon name="hi-search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             v-model="searchQuery"
             type="text"
@@ -122,27 +91,13 @@
                 title="Iniciar conversa"
                 @click="emit('startConversation', contact.id)"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
+                <v-icon name="hi-chat-alt-2" class="w-4 h-4" />
               </button>
               <button
                 class="text-gray-400 hover:text-red-500 p-1 transition-colors"
                 @click="handleDelete(contact.contactId)"
               >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+                <v-icon name="hi-trash" class="w-4 h-4" />
               </button>
             </div>
           </div>

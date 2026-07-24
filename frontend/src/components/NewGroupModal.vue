@@ -10,18 +10,7 @@
           class="text-gray-400 hover:text-gray-600 p-1 border rounded-lg"
           @click="$emit('close')"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <v-icon name="hi-solid-arrow-left" class="h-5 w-5" />
         </button>
         <div class="mx-2">
           <h2 class="text-lg font-semibold text-gray-900">Novo grupo</h2>
@@ -37,36 +26,8 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nome do grupo</label>
           <div class="flex flex-row items-center gap-2">
-            <span class="border rounded-lg mx-1 p-1">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <!-- Pessoa principal -->
-                <circle cx="9" cy="8" r="3" stroke="#9CA3AF" stroke-width="1.8" />
-
-                <path
-                  d="M3.5 18C3.5 15.8 5.9 14 9 14C12.1 14 14.5 15.8 14.5 18"
-                  stroke="#9CA3AF"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  fill="none"
-                />
-
-                <!-- Pessoa secundária -->
-                <circle cx="17" cy="9" r="2.3" stroke="#9CA3AF" stroke-width="1.8" />
-
-                <path
-                  d="M14.8 18C14.8 16.3 16.6 15 19 15C20.8 15 22.2 15.8 23 17"
-                  stroke="#9CA3AF"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  fill="none"
-                />
-              </svg>
+            <span class="border rounded-lg mx-1 p-1 text-gray-400">
+              <v-icon name="hi-user-group" class="w-6 h-6" />
             </span>
             <input
               v-model="groupName"
@@ -81,19 +42,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Participantes</label>
           <div class="relative mb-2">
-            <svg
-              class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <v-icon name="hi-search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               v-model="memberSearch"
               type="text"
@@ -112,18 +61,7 @@
               <UserAvatar :name="m.name" size="sm" />
               {{ m.name }}
               <button class="text-gray-400 hover:text-gray-700 px-1" @click="removeMember(m.id)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
+                <v-icon name="hi-solid-x" class="h-3 w-3" />
               </button>
             </div>
           </div>

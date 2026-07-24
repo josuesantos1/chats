@@ -8,28 +8,14 @@
           class="flex-1 flex items-center justify-center gap-1.5 text-sm text-gray-700 border border-gray-200 rounded-lg py-1.5 hover:bg-gray-50 transition-colors"
           @click="ui.openNewGroupModal"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
+          <v-icon name="hi-user-group" class="w-4 h-4" />
           Novo grupo
         </button>
         <button
           class="flex-1 flex items-center justify-center gap-1.5 text-sm text-gray-700 border border-gray-200 rounded-lg py-1.5 hover:bg-gray-50 transition-colors"
           @click="ui.openContactsModal"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
+          <v-icon name="hi-user" class="w-4 h-4" />
           Contatos
         </button>
       </div>
@@ -37,19 +23,7 @@
       <!-- Search -->
       <div class="px-3 py-2">
         <div class="relative">
-          <svg
-            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+          <v-icon name="hi-search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             v-model="searchQuery"
             type="text"
@@ -120,11 +94,12 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useUiStore } from '@/store/ui'
 import { useAuthStore } from '@/store/auth'
-import { conversationsApi, groupsApi, usersApi } from '@/services/api'
+import { contactsApi, conversationsApi, groupsApi, usersApi } from '@/services/api'
 import ConversationItem from '@/components/ConversationItem.vue'
 import ContactsModal from '@/components/ContactsModal.vue'
 import NewGroupModal from '@/components/NewGroupModal.vue'
 import AddContactModal from '@/components/AddContactModal.vue'
+import type { Conversation } from '@/types'
 
 const ui = useUiStore()
 const auth = useAuthStore()
@@ -219,7 +194,7 @@ function formatTime(isoString: string): string {
   })
 }
 
-function selectConversation(id: string) {
+async function selectConversation(id: string) {
   router.push({ name: 'conversation', params: { id } })
 }
 

@@ -10,18 +10,7 @@
           class="text-gray-400 hover:text-gray-600 p-1 border rounded-lg shrink-0"
           @click="$emit('back')"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <v-icon name="hi-solid-arrow-left" class="h-5 w-5" />
         </button>
         <div class="mx-3">
           <h2 class="text-lg font-semibold text-gray-900">Adicionar contato</h2>
@@ -65,14 +54,7 @@
           <span
             class="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center"
           >
-            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="3"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+            <v-icon name="hi-solid-check" class="w-3 h-3 text-white" />
           </span>
           <div>
             <p class="text-sm font-semibold text-green-700">Contato adicionado</p>
@@ -90,14 +72,7 @@
           <span
             class="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center"
           >
-            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="3"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <v-icon name="hi-solid-x" class="w-3 h-3 text-white" />
           </span>
           <div>
             <p class="text-sm font-semibold text-red-700">Usuário não encontrado</p>
@@ -140,22 +115,22 @@ const { data: users } = useQuery({
 onMounted(() => inputRef.value?.focus())
 
 async function handleAdd() {
+  console.log('handleAdd called with username:', username.value)
   const q = username.value.trim()
   if (!q || !auth.user) return
   status.value = 'idle'
   loading.value = true
   try {
-    const target = (users.value ?? []).find((u) => u.username === q)
-    if (!target || target.id === auth.user.id) {
+
+    console.log('Searching for user with username:', q)
+    const user = await usersApi.get_by_username(q)
+    console.log('User found:', user)
+    if (!user || user.id === auth.user.id) {
       status.value = 'error'
       return
     }
-    await contactsApi.create({ user_id: auth.user.id, contact_id: target.id })
-    queryClient.invalidateQueries({ queryKey: ['contacts'] })
-    addedName.value = target.name
-    addedUsername.value = target.username
-    status.value = 'success'
-    username.value = ''
+
+    await contactsApi.create({ user_id: auth.user.id, contact_id: user.id })
     emit('added')
   } catch {
     status.value = 'error'
