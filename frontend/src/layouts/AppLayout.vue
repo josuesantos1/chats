@@ -94,12 +94,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useUiStore } from '@/store/ui'
 import { useAuthStore } from '@/store/auth'
-import { contactsApi, conversationsApi, groupsApi, usersApi } from '@/services/api'
+import { conversationsApi, groupsApi, usersApi } from '@/services/api'
 import ConversationItem from '@/components/ConversationItem.vue'
 import ContactsModal from '@/components/ContactsModal.vue'
 import NewGroupModal from '@/components/NewGroupModal.vue'
 import AddContactModal from '@/components/AddContactModal.vue'
-import type { Conversation } from '@/types'
 import 'vue-sonner/style.css'
 
 const ui = useUiStore()

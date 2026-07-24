@@ -7,7 +7,7 @@ import {
   HiSearch, HiX, HiChevronUp, HiChevronDown, HiPlus,
   HiUserGroup, HiUser, HiChatAlt2, HiTrash, HiArrowLeft,
   HiSolidArrowLeft, HiSolidX, HiSolidCheck,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   HiAtSymbol, HiMail,
 } from 'oh-vue-icons/icons/hi'
 import { MdSend } from 'oh-vue-icons/icons/md'
@@ -30,7 +30,7 @@ app.use(router)
 app.use(VueQueryPlugin)
 // eslint-disable-next-line vue/multi-word-component-names
 app.component('Toaster', Toaster)
-// eslint-disable-next-line vue/multi-word-component-names
-app.component('v-icon', OhVueIcon)
+ 
+app.component('VIcon', OhVueIcon)
 
 app.mount('#app')

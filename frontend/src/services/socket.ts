@@ -4,7 +4,7 @@ let socket: Socket | null = null
 
 export function getSocket(): Socket {
   if (!socket) {
-    const apiUrl = import.meta.env.VITE_API_URL as string
+    const apiUrl = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:9000/api'
     const socketUrl = apiUrl.replace(/^http/, 'ws').replace(/\/api$/, '/socket')
 
     socket = new Socket(socketUrl, {

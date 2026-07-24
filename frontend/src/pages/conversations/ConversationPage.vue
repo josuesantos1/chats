@@ -85,6 +85,7 @@
                   ]"
                 >
                   <div class="">
+                    <!-- eslint-disable-next-line vue/no-v-html -->
                     <p class="text-sm leading-relaxed" v-html="highlightContent(msg.content)" />
                   </div>
                   <p class="text-xs text-gray-400 mt-0.5 text-right pr-1">{{ msg.time }}</p>
@@ -113,6 +114,7 @@
                     {{ msg.authorName }}
                   </p>
                   <div class="">
+                    <!-- eslint-disable-next-line vue/no-v-html -->
                     <p
                       class="text-sm leading-relaxed text-gray-900"
                       v-html="highlightContent(msg.content)"
@@ -166,7 +168,7 @@ import { getSocket } from '@/services/socket'
 import UserAvatar from '@/components/UserAvatar.vue'
 import AboutGroupModal from '@/components/AboutGroupModal.vue'
 import type { Message, Conversation } from '@/types'
-import { toast,Toaster } from 'vue-sonner'
+import { toast } from 'vue-sonner'
 
 
 const route = useRoute()

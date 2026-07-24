@@ -88,7 +88,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useAuthStore } from '@/store/auth'
 import { contactsApi, usersApi } from '@/services/api'
 
@@ -98,7 +97,6 @@ const emit = defineEmits<{
 }>()
 
 const auth = useAuthStore()
-const queryClient = useQueryClient()
 
 const inputRef = ref<HTMLInputElement | null>(null)
 const username = ref('')
@@ -106,11 +104,6 @@ const loading = ref(false)
 const status = ref<'idle' | 'success' | 'error'>('idle')
 const addedName = ref('')
 const addedUsername = ref('')
-
-const { data: users } = useQuery({
-  queryKey: ['users'],
-  queryFn: () => usersApi.list(),
-})
 
 onMounted(() => inputRef.value?.focus())
 
