@@ -66,7 +66,7 @@ defmodule Seeds.Helpers do
       "Estou aberto a sugestões.",
       "Não tenho certeza, vamos discutir.",
       "Estou feliz em ajudar.",
-      "Vamos manter o foco no objetivo.",
+      "Vamos manter o foco no objetivo."
     ])
   end
 
@@ -160,11 +160,26 @@ IO.puts("Created private conversations with messages")
 # 4. Create 5 groups, each with 4–7 random members and messages
 # ---------------------------------------------------------------------------
 
-group_names = ["Projeto Alpha", "Time de Produto", "Geral", "Dev Squad", "Marketing", "Designers", "Suporte", "RH", "Financeiro", "Vendas"]
+group_names = [
+  "Projeto Alpha",
+  "Time de Produto",
+  "Geral",
+  "Dev Squad",
+  "Marketing",
+  "Designers",
+  "Suporte",
+  "RH",
+  "Financeiro",
+  "Vendas"
+]
 
 Enum.each(group_names, fn name ->
   creator = Enum.random(users)
-  members = [creator | Enum.take(Enum.shuffle(Enum.reject(users, &(&1.id == creator.id))), Enum.random(3..6))]
+
+  members = [
+    creator
+    | Enum.take(Enum.shuffle(Enum.reject(users, &(&1.id == creator.id))), Enum.random(3..6))
+  ]
 
   {:ok, conv} = Conversations.create_conversation(%{type: "group"})
 
