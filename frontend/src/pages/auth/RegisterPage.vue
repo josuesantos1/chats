@@ -36,6 +36,17 @@
             required
           />
         </div>
+        <div class="space-y-1">
+          <label class="text-sm font-medium" for="password">Password</label>
+          <input
+            id="password"
+            v-model="form.password"
+            type="password"
+            class="w-full px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+            placeholder="Min. 6 characters"
+            required
+          />
+        </div>
         <button
           type="submit"
           class="w-full bg-primary text-primary-foreground py-2 rounded-md text-sm font-medium hover:opacity-90 transition-opacity"
@@ -62,7 +73,7 @@ import { usersApi } from '@/services/api'
 const router = useRouter()
 const auth = useAuthStore()
 
-const form = ref({ name: '', email: '', username: '' })
+const form = ref({ name: '', email: '', username: '', password: '' })
 const loading = ref(false)
 const error = ref('')
 

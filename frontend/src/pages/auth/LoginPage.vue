@@ -3,7 +3,7 @@
     <div class="w-full max-w-sm space-y-6 p-8 border border-border rounded-lg">
       <div>
         <h2 class="text-2xl font-semibold">Sign in</h2>
-        <p class="text-sm text-muted-foreground mt-1">Enter your username to continue</p>
+        <p class="text-sm text-muted-foreground mt-1">Enter your credentials to continue</p>
       </div>
       <form class="space-y-4" @submit.prevent="onSubmit">
         <div class="space-y-1">
@@ -14,6 +14,17 @@
             type="text"
             class="w-full px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
             placeholder="your_username"
+            required
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="text-sm font-medium" for="password">Password</label>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            class="w-full px-3 py-2 border border-input rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+            placeholder="••••••"
             required
           />
         </div>
@@ -44,6 +55,7 @@ const router = useRouter()
 const auth = useAuthStore()
 
 const username = ref('')
+const password = ref('')
 const loading = ref(false)
 const error = ref('')
 
@@ -51,11 +63,11 @@ async function onSubmit() {
   loading.value = true
   error.value = ''
   try {
-    const user = await sessionsApi.login(username.value)
+    const user = await sessionsApi.login(username.value, password.value)
     auth.setUser(user)
     router.push('/')
   } catch {
-    error.value = 'User not found.'
+    error.value = 'Invalid username or password.'
   } finally {
     loading.value = false
   }

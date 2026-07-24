@@ -3,14 +3,9 @@ defmodule BackendWeb.SessionController do
 
   alias Backend.Accounts
 
-  def create(conn, %{"username" => username}) do
-    case Accounts.get_user_by_username(username) do
-      nil ->
-        conn
-        |> put_status(:unauthorized)
-        |> json(%{error: "User not found"})
-
-      user ->
+  def create(conn, %{"username" => username, "password" => password}) do
+    case Accounts.verify_credentials(username, password) do
+      {:ok, user} ->
         conn
         |> json(%{
           data: %{
@@ -20,6 +15,11 @@ defmodule BackendWeb.SessionController do
             username: user.username
           }
         })
+
+      {:error, _} ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: "Invalid username or password"})
     end
   end
 end

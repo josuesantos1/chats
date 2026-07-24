@@ -57,8 +57,25 @@ defmodule Backend.Accounts do
   """
   def create_user(attrs) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.registration_changeset(attrs)
     |> Repo.insert()
+  end
+
+  def verify_credentials(username, password) do
+    user = get_user_by_username(username)
+
+    cond do
+      user && Bcrypt.verify_pass(password, user.password_hash) ->
+        {:ok, user}
+
+      user ->
+        Bcrypt.no_user_verify()
+        {:error, :invalid_credentials}
+
+      true ->
+        Bcrypt.no_user_verify()
+        {:error, :invalid_credentials}
+    end
   end
 
   @doc """
