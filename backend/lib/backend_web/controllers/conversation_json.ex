@@ -5,7 +5,13 @@ defmodule BackendWeb.ConversationJSON do
   Renders a list of conversations.
   """
   def index(%{conversations: conversations, last_messages: last_messages}) do
-    %{data: for(conversation <- conversations, do: data(conversation, Map.get(last_messages, conversation.id)))}
+    %{
+      data:
+        for(
+          conversation <- conversations,
+          do: data(conversation, Map.get(last_messages, conversation.id))
+        )
+    }
   end
 
   @doc """
