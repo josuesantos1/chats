@@ -86,11 +86,31 @@ end
 # 1. Create 10 users
 # ---------------------------------------------------------------------------
 
+usersnames = [
+  "Josue",
+  "Izabella",
+  "Gabriel",
+  "Mariana",
+  "Lucas",
+  "Sofia",
+  "Mateus",
+  "Isabella",
+  "Bruna",
+  "Rafael",
+  "Alice",
+  "Bob",
+  "Charlie",
+  "David",
+  "Frank",
+  "Ivan",
+  "Judy",
+]
+
 users =
-  Enum.map(1..10, fn i ->
+  Enum.map(1..length(usersnames), fn i ->
     {:ok, user} =
       Accounts.create_user(%{
-        name: "Usuário #{i}",
+        name: Enum.at(usersnames, i - 1),
         username: "user#{i}",
         email: "user#{i}@example.com"
       })

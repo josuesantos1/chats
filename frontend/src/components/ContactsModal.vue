@@ -25,33 +25,6 @@
         </button>
       </div>
 
-      <!-- Add contact form -->
-      <div v-if="addingContact" class="px-5 pb-3">
-        <div class="flex gap-2">
-          <input
-            v-model="searchUsername"
-            type="text"
-            placeholder="Username do contato"
-            class="flex-1 text-sm px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
-            @keyup.enter="handleAddContact"
-          />
-          <button
-            class="text-sm px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors"
-            :disabled="addLoading"
-            @click="handleAddContact"
-          >
-            {{ addLoading ? '...' : 'Ok' }}
-          </button>
-          <button
-            class="text-sm px-3 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            @click="((addingContact = false), (searchUsername = ''))"
-          >
-            Cancelar
-          </button>
-        </div>
-        <p v-if="addError" class="text-xs text-red-500 mt-1">{{ addError }}</p>
-      </div>
-
       <!-- Search -->
       <div class="px-5 pb-3">
         <div class="relative">
@@ -117,10 +90,6 @@ const auth = useAuthStore()
 const queryClient = useQueryClient()
 
 const searchQuery = ref('')
-const addingContact = ref(false)
-const searchUsername = ref('')
-const addError = ref('')
-const addLoading = ref(false)
 
 const { data: contacts, isPending: loadingContacts } = useQuery({
   queryKey: ['contacts'],
@@ -170,32 +139,6 @@ const groupedContacts = computed(() => {
   }
   return groups
 })
-
-async function handleAddContact() {
-  if (!searchUsername.value.trim() || !auth.user) return
-  addError.value = ''
-  addLoading.value = true
-  try {
-    const allUsers = users.value ?? []
-    const target = allUsers.find((u) => u.username === searchUsername.value.trim())
-    if (!target) {
-      addError.value = 'Usuário não encontrado.'
-      return
-    }
-    if (target.id === auth.user.id) {
-      addError.value = 'Você não pode se adicionar.'
-      return
-    }
-    await contactsApi.create({ user_id: auth.user.id, contact_id: target.id })
-    queryClient.invalidateQueries({ queryKey: ['contacts'] })
-    addingContact.value = false
-    searchUsername.value = ''
-  } catch {
-    addError.value = 'Erro ao adicionar contato.'
-  } finally {
-    addLoading.value = false
-  }
-}
 
 async function handleDelete(contactId: string) {
   await contactsApi.delete(contactId)

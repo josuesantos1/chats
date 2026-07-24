@@ -7,6 +7,7 @@ defmodule Backend.Groups do
   alias Backend.Repo
 
   alias Backend.Groups.Group
+  alias Backend.Conversations.ConversationMember
 
   @doc """
   Returns the list of groups.
@@ -19,6 +20,14 @@ defmodule Backend.Groups do
   """
   def list_groups do
     Repo.all(Group)
+  end
+
+  def list_groups_for_user(user_id) do
+    Group
+    |> join(:inner, [g], cm in ConversationMember,
+      on: cm.conversation_id == g.conversation_id and cm.user_id == ^user_id
+    )
+    |> Repo.all()
   end
 
   @doc """

@@ -37,6 +37,12 @@ defmodule Backend.Conversations do
     |> Repo.all()
   end
 
+  def is_member?(conversation_id, user_id) do
+    ConversationMember
+    |> where([cm], cm.conversation_id == ^conversation_id and cm.user_id == ^user_id)
+    |> Repo.exists?()
+  end
+
   def add_conversation_member(attrs) do
     %ConversationMember{}
     |> ConversationMember.changeset(attrs)

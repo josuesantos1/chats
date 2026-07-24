@@ -43,6 +43,12 @@ defmodule Backend.Contacts do
   """
   def get_contact!(id), do: Repo.get!(Contact, id)
 
+  def get_contact_for_user(id, user_id) do
+    Contact
+    |> where([c], c.id == ^id and c.user_id == ^user_id)
+    |> Repo.one()
+  end
+
   @doc """
   Creates a contact.
 

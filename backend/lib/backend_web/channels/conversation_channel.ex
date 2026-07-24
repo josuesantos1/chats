@@ -5,19 +5,28 @@ defmodule BackendWeb.ConversationChannel do
 
   use BackendWeb, :channel
 
+  alias Backend.Conversations
   alias Backend.Messages
 
   @impl true
-  def join("conversation:" <> _conversation_id, _params, socket) do
-    {:ok, socket}
+  def join("conversation:" <> conversation_id, _params, socket) do
+    user_id = socket.assigns.current_user.id
+
+    if Conversations.is_member?(conversation_id, user_id) do
+      {:ok, socket}
+    else
+      {:error, %{reason: "unauthorized"}}
+    end
   end
 
   @impl true
   def handle_in(
         "send_message",
-        %{"conversation_id" => conversation_id, "author_id" => author_id, "content" => content},
+        %{"conversation_id" => conversation_id, "content" => content},
         socket
       ) do
+    author_id = socket.assigns.current_user.id
+
     attrs = %{
       conversation_id: conversation_id,
       author_id: author_id,

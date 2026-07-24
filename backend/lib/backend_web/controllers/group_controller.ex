@@ -7,7 +7,7 @@ defmodule BackendWeb.GroupController do
   action_fallback BackendWeb.FallbackController
 
   def index(conn, _params) do
-    groups = Groups.list_groups()
+    groups = Groups.list_groups_for_user(conn.assigns.current_user.id)
     render(conn, :index, groups: groups)
   end
 

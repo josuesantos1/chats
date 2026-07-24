@@ -12,7 +12,10 @@ defmodule BackendWeb.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    IO.inspect(contact_params, label: "Contact params")
+    existing =
+      Contacts.list_contacts_for_user(conn.assigns.current_user.id)
+      |> Enum.find(fn c -> c.contact_id == contact_params["contact_id"] end)
+
     cond do
       contact_params["user_id"] != conn.assigns.current_user.id ->
         conn
@@ -24,8 +27,7 @@ defmodule BackendWeb.ContactController do
         |> put_status(:bad_request)
         |> json(%{error: "You cannot add yourself as a contact."})
 
-      (existing = Contacts.list_contacts_for_user(conn.assigns.current_user.id)
-       |> Enum.find(fn c -> c.contact_id == contact_params["contact_id"] end)) != nil ->
+      existing != nil ->
         render(conn, :show, contact: existing)
 
       true ->
@@ -44,18 +46,22 @@ defmodule BackendWeb.ContactController do
   end
 
   def update(conn, %{"id" => id, "contact" => contact_params}) do
-    contact = Contacts.get_contact!(id)
-
-    with {:ok, %Contact{} = contact} <- Contacts.update_contact(contact, contact_params) do
+    with %Contact{} = contact <- Contacts.get_contact_for_user(id, conn.assigns.current_user.id),
+         {:ok, %Contact{} = contact} <- Contacts.update_contact(contact, contact_params) do
       render(conn, :show, contact: contact)
+    else
+      nil -> conn |> put_status(:not_found) |> json(%{error: "Not found."})
+      {:error, changeset} -> {:error, changeset}
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    contact = Contacts.get_contact!(id)
-
-    with {:ok, %Contact{}} <- Contacts.delete_contact(contact) do
+    with %Contact{} = contact <- Contacts.get_contact_for_user(id, conn.assigns.current_user.id),
+         {:ok, %Contact{}} <- Contacts.delete_contact(contact) do
       send_resp(conn, :no_content, "")
+    else
+      nil -> conn |> put_status(:not_found) |> json(%{error: "Not found."})
+      {:error, changeset} -> {:error, changeset}
     end
   end
 end

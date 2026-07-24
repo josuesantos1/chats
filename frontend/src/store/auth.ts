@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { User } from '@/types'
+import { disconnectSocket } from '@/services/socket'
 
 export const useAuthStore = defineStore('auth', () => {
   const stored = localStorage.getItem('user')
@@ -18,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     localStorage.removeItem('user_id')
     localStorage.removeItem('user')
+    disconnectSocket()
   }
 
   return { user, isAuthenticated, setUser, logout }

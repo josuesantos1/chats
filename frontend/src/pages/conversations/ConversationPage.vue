@@ -6,7 +6,7 @@
       >
         <button
           class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-md"
-          @click="((cancelSearch = true), (searchQuery = ''), (showSearchSection = false))"
+          @click="((searchQuery = ''), (showSearchSection = false))"
         >
           <v-icon name="hi-x" class="w-5 h-5" />
         </button>
@@ -18,8 +18,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="Pesquisar mensagens..."
-            class="w-full text-sm bg-gray-50 mx-2 px-2 focus:outline-none "
-            @input="searchHandler"
+            class="w-full text-sm bg-gray-50 mx-2 px-2 focus:outline-none"
           />
         </span>
 
@@ -159,12 +158,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useAuthStore } from '@/store/auth'
 import { conversationsApi, groupsApi, usersApi } from '@/services/api'
-import { getSocket } from '@/services/socket'
+import { useConversationChannel } from '@/composables/useConversationChannel'
 import UserAvatar from '@/components/UserAvatar.vue'
 import AboutGroupModal from '@/components/AboutGroupModal.vue'
 import type { Message, Conversation } from '@/types'
@@ -182,7 +181,6 @@ const sending = ref(false)
 
 const localMessages = ref<Message[]>([])
 
-const cancelSearch = ref(false)
 const searchQuery = ref('')
 const currentSearchIndex = ref(0)
 const showSearchSection = ref(false)
@@ -227,8 +225,6 @@ watch(searchQuery, () => {
   if (searchResults.value.length > 0) scrollToSearchResult()
 })
 
-let activeChannel: any = null
-
 function onNewMessage(msg: Message, received = false) {
   if (!localMessages.value.find((m) => m.id === msg.id)) {
     localMessages.value.push(msg)
@@ -247,26 +243,7 @@ function onNewMessage(msg: Message, received = false) {
   })
 }
 
-watch(
-  conversationId,
-  (newId, oldId) => {
-    if (oldId && activeChannel) {
-      activeChannel.leave()
-      activeChannel = null
-    }
-    if (!newId) return
-    const channel = getSocket().channel(`conversation:${newId}`)
-    channel.on('new_message', (payload: Message) => onNewMessage(payload, true))
-    channel.join().receive('error', (err) => console.error('Channel join error:', err))
-    activeChannel = channel
-  },
-  { immediate: true },
-)
-
-onUnmounted(() => {
-  activeChannel?.leave()
-  activeChannel = null
-})
+const { push: pushToChannel } = useConversationChannel(conversationId, onNewMessage)
 
 const conversation = computed(() =>
   allConversations.value?.find((c) => c.id === conversationId.value),
@@ -387,20 +364,15 @@ function formatDateKey(isoString: string) {
 }
 
 async function handleSend() {
-  if (!newMessage.value.trim() || !auth.user || sending.value || !activeChannel) return
+  if (!newMessage.value.trim() || !auth.user || sending.value) return
   sending.value = true
   const content = newMessage.value.trim()
   newMessage.value = ''
   try {
-    const msg = await new Promise<Message>((resolve, reject) => {
-      activeChannel
-        .push('send_message', {
-          content,
-          author_id: auth.user!.id,
-          conversation_id: conversationId.value,
-        })
-        .receive('ok', (m: Message) => resolve(m))
-        .receive('error', (err: unknown) => reject(err))
+    const msg = await pushToChannel('send_message', {
+      content,
+      author_id: auth.user.id,
+      conversation_id: conversationId.value,
     })
     onNewMessage(msg)
   } catch {

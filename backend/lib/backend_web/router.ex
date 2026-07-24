@@ -32,7 +32,7 @@ defmodule BackendWeb.Router do
     end
 
     resources "/groups", GroupController, except: [:new, :edit]
-    resources "/messages", MessageController, except: [:new, :edit]
+    resources "/messages", MessageController, except: [:new, :edit, :index]
   end
 
   # Enable LiveDashboard in development

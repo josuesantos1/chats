@@ -19,5 +19,6 @@ defmodule Backend.Contacts.Contact do
     |> validate_required([:user_id, :contact_id])
     |> foreign_key_constraint(:user_id)
     |> foreign_key_constraint(:contact_id)
+    |> unique_constraint([:user_id, :contact_id])
   end
 end
