@@ -7,11 +7,11 @@ defmodule Backend.ContactsFixtures do
   import Backend.AccountsFixtures
 
   @doc """
-  Generate a contact.
+  Generate a contact between two new users.
   """
   def contact_fixture(attrs \\ %{}) do
-    user = user_fixture(%{email: "user@email.com", username: "user"})
-    contact_user = user_fixture(%{email: "contact@email.com", username: "contact"})
+    user = user_fixture()
+    contact_user = user_fixture()
 
     {:ok, contact} =
       attrs

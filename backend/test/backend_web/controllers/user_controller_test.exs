@@ -5,16 +5,15 @@ defmodule BackendWeb.UserControllerTest do
   alias Backend.Accounts.User
 
   @create_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960662",
     name: "some name",
-    username: "some username",
-    email: "some email"
+    username: "create_user_test",
+    email: "create_user@test.com",
+    password: "password123"
   }
   @update_attrs %{
-    id: "7488a646-e31f-11e4-aace-600308960668",
     name: "some updated name",
-    username: "some updated username",
-    email: "some updated email"
+    username: "updated_user_test",
+    email: "updated_user@test.com"
   }
   @invalid_attrs %{id: nil, name: nil, username: nil, email: nil}
 
@@ -38,15 +37,40 @@ defmodule BackendWeb.UserControllerTest do
       conn = get(conn, ~p"/api/users/#{id}")
 
       assert %{
-               "email" => "some email",
+               "email" => "create_user@test.com",
                "name" => "some name",
-               "username" => "some username"
+               "username" => "create_user_test"
              } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, ~p"/api/users", user: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
+    end
+  end
+
+  describe "show user" do
+    setup [:create_user]
+
+    test "renders user by id", %{conn: conn, user: user} do
+      conn = get(conn, ~p"/api/users/#{user.id}")
+      assert %{"id" => id} = json_response(conn, 200)["data"]
+      assert id == user.id
+    end
+  end
+
+  describe "get user by username" do
+    setup [:create_user]
+
+    test "renders user when username exists", %{conn: conn, user: user} do
+      conn = get(conn, ~p"/api/users/#{user.username}/username/")
+      assert %{"id" => id} = json_response(conn, 200)["data"]
+      assert id == user.id
+    end
+
+    test "returns 404 when username does not exist", %{conn: conn} do
+      conn = get(conn, ~p"/api/users/nonexistent/username/")
+      assert json_response(conn, 404)["error"] != nil
     end
   end
 
@@ -60,9 +84,9 @@ defmodule BackendWeb.UserControllerTest do
       conn = get(conn, ~p"/api/users/#{id}")
 
       assert %{
-               "email" => "some updated email",
+               "email" => "updated_user@test.com",
                "name" => "some updated name",
-               "username" => "some updated username"
+               "username" => "updated_user_test"
              } = json_response(conn, 200)["data"]
     end
 
@@ -87,7 +111,6 @@ defmodule BackendWeb.UserControllerTest do
 
   defp create_user(_) do
     user = user_fixture()
-
     %{user: user}
   end
 end

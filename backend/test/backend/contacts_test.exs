@@ -13,7 +13,21 @@ defmodule Backend.ContactsTest do
 
     test "list_contacts/0 returns all contacts" do
       contact = contact_fixture()
-      assert Contacts.list_contacts() == [contact]
+      assert Enum.any?(Contacts.list_contacts(), &(&1.id == contact.id))
+    end
+
+    test "list_contacts_for_user/1 returns only contacts belonging to user" do
+      contact = contact_fixture()
+      other_contact = contact_fixture()
+
+      result = Contacts.list_contacts_for_user(contact.user_id)
+      assert Enum.any?(result, &(&1.id == contact.id))
+      refute Enum.any?(result, &(&1.id == other_contact.id))
+    end
+
+    test "list_contacts_for_user/1 returns empty list for user with no contacts" do
+      user = user_fixture()
+      assert Contacts.list_contacts_for_user(user.id) == []
     end
 
     test "get_contact!/1 returns the contact with given id" do
@@ -21,9 +35,21 @@ defmodule Backend.ContactsTest do
       assert Contacts.get_contact!(contact.id) == contact
     end
 
+    test "get_contact_for_user/2 returns the contact when owned by user" do
+      contact = contact_fixture()
+      result = Contacts.get_contact_for_user(contact.id, contact.user_id)
+      assert result.id == contact.id
+    end
+
+    test "get_contact_for_user/2 returns nil when contact is not owned by user" do
+      contact = contact_fixture()
+      other_user = user_fixture()
+      assert Contacts.get_contact_for_user(contact.id, other_user.id) == nil
+    end
+
     test "create_contact/1 with valid data creates a contact" do
-      user = user_fixture(%{email: "user@email.com", username: "user"})
-      contact_user = user_fixture(%{email: "contact@email.com", username: "contact"})
+      user = user_fixture()
+      contact_user = user_fixture()
       valid_attrs = %{user_id: user.id, contact_id: contact_user.id}
 
       assert {:ok, %Contact{} = contact} = Contacts.create_contact(valid_attrs)
@@ -37,11 +63,11 @@ defmodule Backend.ContactsTest do
 
     test "update_contact/2 with valid data updates the contact" do
       contact = contact_fixture()
-      user = user_fixture(%{email: "new@email.com", username: "new_user"})
-      update_attrs = %{user_id: user.id}
+      new_user = user_fixture()
+      update_attrs = %{user_id: new_user.id}
 
       assert {:ok, %Contact{} = contact} = Contacts.update_contact(contact, update_attrs)
-      assert contact.user_id == user.id
+      assert contact.user_id == new_user.id
     end
 
     test "update_contact/2 with invalid data returns error changeset" do

@@ -40,11 +40,6 @@ defmodule BackendWeb.ContactController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    contact = Contacts.get_contact!(id)
-    render(conn, :show, contact: contact)
-  end
-
   def update(conn, %{"id" => id, "contact" => contact_params}) do
     with %Contact{} = contact <- Contacts.get_contact_for_user(id, conn.assigns.current_user.id),
          {:ok, %Contact{} = contact} <- Contacts.update_contact(contact, contact_params) do

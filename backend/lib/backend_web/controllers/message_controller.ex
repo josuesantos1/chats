@@ -6,11 +6,6 @@ defmodule BackendWeb.MessageController do
 
   action_fallback BackendWeb.FallbackController
 
-  def index(conn, _params) do
-    messages = Messages.list_messages()
-    render(conn, :index, messages: messages)
-  end
-
   def by_conversation(conn, %{"conversation_id" => conversation_id}) do
     messages = Messages.list_messages_by_conversation(conversation_id)
     render(conn, :index, messages: messages)

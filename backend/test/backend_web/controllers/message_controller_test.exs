@@ -1,29 +1,44 @@
 defmodule BackendWeb.MessageControllerTest do
   use BackendWeb.ConnCase
 
-  import Backend.MessagesFixtures
-  import Backend.AccountsFixtures
   import Backend.ConversationsFixtures
   alias Backend.Messages.Message
 
   @invalid_attrs %{content: nil}
 
-  setup %{conn: conn} do
-    user = user_fixture()
+  setup %{conn: conn, current_user: current_user} do
     conversation = conversation_fixture()
 
     create_attrs = %{
       content: "some content",
-      author_id: user.id,
+      author_id: current_user.id,
       conversation_id: conversation.id
     }
 
-    {:ok, conn: put_req_header(conn, "accept", "application/json"), create_attrs: create_attrs}
+    {:ok,
+     conn: put_req_header(conn, "accept", "application/json"),
+     create_attrs: create_attrs,
+     conversation: conversation}
   end
 
-  describe "index" do
-    test "lists all messages", %{conn: conn} do
-      conn = get(conn, ~p"/api/messages")
+  describe "by_conversation" do
+    test "lists messages for a conversation", %{
+      conn: conn,
+      conversation: conversation,
+      create_attrs: create_attrs
+    } do
+      Backend.Messages.create_message(create_attrs)
+      conn = get(conn, ~p"/api/conversations/#{conversation.id}/messages")
+      data = json_response(conn, 200)["data"]
+      assert length(data) == 1
+      assert hd(data)["content"] == "some content"
+    end
+
+    test "returns empty list for conversation with no messages", %{
+      conn: conn,
+      conversation: conversation
+    } do
+      conn = get(conn, ~p"/api/conversations/#{conversation.id}/messages")
       assert json_response(conn, 200)["data"] == []
     end
   end
@@ -73,8 +88,8 @@ defmodule BackendWeb.MessageControllerTest do
     end
   end
 
-  defp create_message(_) do
-    message = message_fixture()
+  defp create_message(%{create_attrs: create_attrs}) do
+    {:ok, message} = Backend.Messages.create_message(create_attrs)
     %{message: message}
   end
 end

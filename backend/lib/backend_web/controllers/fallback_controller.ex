@@ -13,12 +13,4 @@ defmodule BackendWeb.FallbackController do
     |> put_view(json: BackendWeb.ChangesetJSON)
     |> render(:error, changeset: changeset)
   end
-
-  # This clause is an example of how to handle resources that cannot be found.
-  def call(conn, {:error, :not_found}) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(html: BackendWeb.ErrorHTML, json: BackendWeb.ErrorJSON)
-    |> render(:"404")
-  end
 end

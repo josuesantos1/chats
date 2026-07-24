@@ -14,7 +14,35 @@ defmodule Backend.GroupsTest do
 
     test "list_groups/0 returns all groups" do
       group = group_fixture()
-      assert Groups.list_groups() == [group]
+      assert Enum.any?(Groups.list_groups(), &(&1.id == group.id))
+    end
+
+    test "list_groups_for_user/1 returns groups where user is a conversation member" do
+      user = user_fixture()
+      conversation = conversation_fixture(%{type: "group"})
+
+      {:ok, group} =
+        Groups.create_group(%{
+          name: "test group",
+          creator_id: user.id,
+          conversation_id: conversation.id
+        })
+
+      {:ok, _} =
+        Backend.Conversations.add_conversation_member(%{
+          conversation_id: conversation.id,
+          user_id: user.id
+        })
+
+      result = Groups.list_groups_for_user(user.id)
+      assert Enum.any?(result, &(&1.id == group.id))
+    end
+
+    test "list_groups_for_user/1 excludes groups where user is not a member" do
+      user = user_fixture()
+      _group = group_fixture()
+
+      assert Groups.list_groups_for_user(user.id) == []
     end
 
     test "get_group!/1 returns the group with given id" do

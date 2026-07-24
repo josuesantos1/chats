@@ -105,6 +105,11 @@ defmodule Backend.MixProject do
       test: [
         "ecto.create --quiet",
         "ecto.migrate --quiet",
+        fn _ ->
+          src = "_build/test/lib/bcrypt_elixir/priv/bcrypt_nif.so"
+          dst = "_build/test/lib/bcrypt_elixir/priv/bcrypt_nif.dll"
+          if File.exists?(src) and not File.exists?(dst), do: File.cp!(src, dst)
+        end,
         "test"
       ],
       quality: [
