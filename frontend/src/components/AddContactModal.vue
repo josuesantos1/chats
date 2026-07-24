@@ -118,7 +118,7 @@ async function handleAdd() {
       status.value = 'error'
       return
     }
-    console.log('Adding contact', user)
+
     await contactsApi.create({ user_id: auth.user.id, contact_id: user.id })
     addedName.value = user.name
     addedUsername.value = user.username
@@ -134,7 +134,6 @@ async function handleAdd() {
     status.value = 'error'
   } finally {
     loading.value = false
-    // console.log('Add contact finished')
   }
 }
 </script>
