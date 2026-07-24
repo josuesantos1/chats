@@ -100,6 +100,7 @@ import ContactsModal from '@/components/ContactsModal.vue'
 import NewGroupModal from '@/components/NewGroupModal.vue'
 import AddContactModal from '@/components/AddContactModal.vue'
 import type { Conversation } from '@/types'
+import 'vue-sonner/style.css'
 
 const ui = useUiStore()
 const auth = useAuthStore()
@@ -206,6 +207,19 @@ function onGroupCreated(conversationId: string) {
 async function onStartPrivateConversation(contactUserId: string) {
   if (!auth.user) return
   ui.closeContactsModal()
+
+  const existing = conversations.value?.find(
+    (c) =>
+      c.type === 'private' &&
+      c.member_ids.includes(auth.user!.id) &&
+      c.member_ids.includes(contactUserId),
+  )
+
+  if (existing) {
+    router.push({ name: 'conversation', params: { id: existing.id } })
+    return
+  }
+
   const conversation = await conversationsApi.create({ type: 'private' })
   await Promise.all([
     conversationsApi.addMember(conversation.id, auth.user.id),

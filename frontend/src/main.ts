@@ -7,6 +7,8 @@ import {
   HiSearch, HiX, HiChevronUp, HiChevronDown, HiPlus,
   HiUserGroup, HiUser, HiChatAlt2, HiTrash, HiArrowLeft,
   HiSolidArrowLeft, HiSolidX, HiSolidCheck,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  HiAtSymbol, HiMail,
 } from 'oh-vue-icons/icons/hi'
 import { MdSend } from 'oh-vue-icons/icons/md'
 import router from './routes'
@@ -17,6 +19,7 @@ addIcons(
   HiSearch, HiX, HiChevronUp, HiChevronDown, HiPlus,
   HiUserGroup, HiUser, HiChatAlt2, HiTrash, HiArrowLeft,
   HiSolidArrowLeft, HiSolidX, HiSolidCheck,
+  HiAtSymbol, HiMail,
   MdSend,
 )
 

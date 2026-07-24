@@ -153,6 +153,7 @@
     :conversation-id="conversationId"
     @close="openAboutModel = false"
   />
+  <!-- <Toaster /> -->
 </template>
 
 <script setup lang="ts">
@@ -165,7 +166,7 @@ import { getSocket } from '@/services/socket'
 import UserAvatar from '@/components/UserAvatar.vue'
 import AboutGroupModal from '@/components/AboutGroupModal.vue'
 import type { Message, Conversation } from '@/types'
-
+import { toast,Toaster } from 'vue-sonner'
 
 
 const route = useRoute()
@@ -226,9 +227,13 @@ watch(searchQuery, () => {
 
 let activeChannel: any = null
 
-function onNewMessage(msg: Message) {
+function onNewMessage(msg: Message, received = false) {
   if (!localMessages.value.find((m) => m.id === msg.id)) {
     localMessages.value.push(msg)
+  }
+  if (received) {
+    const senderName = usersMap.value.get(msg.author_id)?.name ?? 'Nova mensagem'
+    toast("Mensagem de " + senderName, { description: msg.content })
   }
   queryClient.setQueryData(['conversations'], (old: Conversation[] | undefined) => {
     if (!old) return old
@@ -249,7 +254,7 @@ watch(
     }
     if (!newId) return
     const channel = getSocket().channel(`conversation:${newId}`)
-    channel.on('new_message', (payload: Message) => onNewMessage(payload))
+    channel.on('new_message', (payload: Message) => onNewMessage(payload, true))
     channel.join().receive('error', (err) => console.error('Channel join error:', err))
     activeChannel = channel
   },

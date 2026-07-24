@@ -22,7 +22,8 @@ defmodule BackendWeb.Router do
     pipe_through [:api, :authenticate]
 
     resources "/users", UserController, only: [:index, :show, :update, :delete]
-    resources "/contacts", ContactController, except: [:new, :edit]
+    get "/users/username/:username", UserController, :get_user_by_username
+    resources "/contacts", ContactController, except: [:new, :edit, :show]
 
     resources "/conversations", ConversationController, except: [:new, :edit] do
       get "/messages", MessageController, :by_conversation

@@ -40,4 +40,16 @@ defmodule BackendWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def get_user_by_username(conn, %{"username" => username}) do
+    case Accounts.get_user_by_username(username) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: "User not found"})
+
+      user ->
+        render(conn, :show, user: user)
+    end
+  end
 end
