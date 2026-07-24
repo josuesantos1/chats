@@ -91,7 +91,10 @@ defmodule BackendWeb.ConversationChannelTest do
       assert payload.conversation_id == conversation.id
     end
 
-    test "returns error for invalid message content", %{socket: socket, conversation: conversation} do
+    test "returns error for invalid message content", %{
+      socket: socket,
+      conversation: conversation
+    } do
       ref =
         push(socket, "send_message", %{
           "conversation_id" => conversation.id,

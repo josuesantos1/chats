@@ -143,9 +143,7 @@ defmodule BackendWeb.ConversationControllerTest do
       user = user_fixture()
 
       conn =
-        post(conn, ~p"/api/conversations/#{conversation.id}/members",
-          member: %{user_id: user.id}
-        )
+        post(conn, ~p"/api/conversations/#{conversation.id}/members", member: %{user_id: user.id})
 
       data = json_response(conn, 200)["data"]
       assert Enum.any?(data, &(&1["user_id"] == user.id))

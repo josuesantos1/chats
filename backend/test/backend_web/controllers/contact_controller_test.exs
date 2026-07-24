@@ -38,9 +38,7 @@ defmodule BackendWeb.ContactControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn, current_user: current_user} do
       conn =
-        post(conn, ~p"/api/contacts",
-          contact: %{user_id: current_user.id, contact_id: nil}
-        )
+        post(conn, ~p"/api/contacts", contact: %{user_id: current_user.id, contact_id: nil})
 
       assert json_response(conn, 422)["errors"] != %{}
     end

@@ -103,7 +103,7 @@ usernames = [
   "David",
   "Frank",
   "Ivan",
-  "Judy",
+  "Judy"
 ]
 
 lastnames = [
@@ -123,7 +123,7 @@ lastnames = [
   "Martins",
   "Ribeiro",
   "Mendes",
-  "Barbosa",
+  "Barbosa"
 ]
 
 users =
