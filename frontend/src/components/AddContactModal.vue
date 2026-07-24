@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/store/auth'
-import { contactsApi, usersApi } from '@/services/api'
+import { contactsApi, conversationsApi, usersApi } from '@/services/api'
 
 const emit = defineEmits<{
   back: []
@@ -122,6 +122,13 @@ async function handleAdd() {
     await contactsApi.create({ user_id: auth.user.id, contact_id: user.id })
     addedName.value = user.name
     addedUsername.value = user.username
+
+    const conversation = await conversationsApi.create({ type: 'private' })
+    const userIds = [auth.user.id, user.id]
+    for (const userId of userIds) {
+      await conversationsApi.addMember(conversation.id, userId)
+    }
+
     status.value = 'success'
   } catch {
     status.value = 'error'
