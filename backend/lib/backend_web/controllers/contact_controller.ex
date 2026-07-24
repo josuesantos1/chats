@@ -12,11 +12,29 @@ defmodule BackendWeb.ContactController do
   end
 
   def create(conn, %{"contact" => contact_params}) do
-    with {:ok, %Contact{} = contact} <- Contacts.create_contact(contact_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/contacts/#{contact}")
-      |> render(:show, contact: contact)
+    IO.inspect(contact_params, label: "Contact params")
+    cond do
+      contact_params["user_id"] != conn.assigns.current_user.id ->
+        conn
+        |> put_status(:forbidden)
+        |> json(%{error: "You can only create contacts for yourself."})
+
+      contact_params["user_id"] == contact_params["contact_id"] ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{error: "You cannot add yourself as a contact."})
+
+      (existing = Contacts.list_contacts_for_user(conn.assigns.current_user.id)
+       |> Enum.find(fn c -> c.contact_id == contact_params["contact_id"] end)) != nil ->
+        render(conn, :show, contact: existing)
+
+      true ->
+        with {:ok, %Contact{} = contact} <- Contacts.create_contact(contact_params) do
+          conn
+          |> put_status(:created)
+          |> put_resp_header("location", ~p"/api/contacts/#{contact}")
+          |> render(:show, contact: contact)
+        end
     end
   end
 

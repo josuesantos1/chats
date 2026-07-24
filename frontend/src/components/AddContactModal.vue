@@ -81,8 +81,8 @@
             </p>
           </div>
         </div>
-      </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -108,27 +108,26 @@ const addedUsername = ref('')
 onMounted(() => inputRef.value?.focus())
 
 async function handleAdd() {
-  console.log('handleAdd called with username:', username.value)
   const q = username.value.trim()
   if (!q || !auth.user) return
   status.value = 'idle'
   loading.value = true
   try {
-
-    console.log('Searching for user with username:', q)
     const user = await usersApi.get_by_username(q)
-    console.log('User found:', user)
     if (!user || user.id === auth.user.id) {
       status.value = 'error'
       return
     }
-
+    console.log('Adding contact', user)
     await contactsApi.create({ user_id: auth.user.id, contact_id: user.id })
-    emit('added')
+    addedName.value = user.name
+    addedUsername.value = user.username
+    status.value = 'success'
   } catch {
     status.value = 'error'
   } finally {
     loading.value = false
+    // console.log('Add contact finished')
   }
 }
 </script>

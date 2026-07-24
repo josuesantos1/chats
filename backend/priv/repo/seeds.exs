@@ -5,6 +5,11 @@ alias Backend.Conversations
 alias Backend.Groups
 alias Backend.Messages
 
+if Repo.aggregate(Backend.Accounts.User, :count) > 0 do
+  IO.puts("Seed already ran, skipping.")
+  System.halt(0)
+end
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
