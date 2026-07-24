@@ -87,17 +87,10 @@
                 <p class="text-xs text-gray-400">@{{ contact.username }}</p>
               </div>
               <button
-                class="text-gray-400 hover:text-blue-500 p-1 transition-colors mr-1"
-                title="Iniciar conversa"
-                @click="emit('startConversation', contact.id)"
-              >
-                <v-icon name="hi-chat-alt-2" class="w-4 h-4" />
-              </button>
-              <button
-                class="text-gray-400 hover:text-red-500 p-1 transition-colors"
+                class="text-gray-400 hover:text-red-500 py-1 px-2 transition-colors rounded-md border"
                 @click="handleDelete(contact.contactId)"
               >
-                <v-icon name="hi-trash" class="w-4 h-4" />
+                <v-icon name="hi-trash" class="w-5 h-5" />
               </button>
             </div>
           </div>

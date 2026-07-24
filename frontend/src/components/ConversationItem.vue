@@ -1,6 +1,6 @@
 <template>
   <button
-    class="w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-100 transition-colors text-left"
+    class="w-full flex items-center gap-3 px-3 my-1 py-3 hover:bg-gray-100 transition-colors text-left rounded-md"
     :class="{ 'bg-gray-100': active }"
     @click="$emit('select')"
   >

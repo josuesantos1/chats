@@ -28,13 +28,14 @@
             v-model="searchQuery"
             type="text"
             placeholder="Buscar"
-            class="w-full pl-9 pr-3 py-1.5 text-sm bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 border-0"
+            class="w-full pl-9 pr-3 py-1.5 text-sm bg-white-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 border"
           />
         </div>
       </div>
 
       <!-- Conversation list -->
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 overflow-auto scrollbar-none"
+        >
         <template v-if="loadingConversations">
           <div class="text-sm text-gray-400 text-center py-8">Carregando...</div>
         </template>
@@ -161,9 +162,19 @@ const enrichedConversations = computed(() => {
 })
 
 const filteredConversations = computed(() => {
-  if (!searchQuery.value) return enrichedConversations.value
   const q = searchQuery.value.toLowerCase()
-  return enrichedConversations.value.filter((c) => c.displayName.toLowerCase().includes(q))
+
+  const conversations = !searchQuery.value
+    ? enrichedConversations.value
+    : enrichedConversations.value.filter((c) =>
+        c.displayName.toLowerCase().includes(q)
+      )
+
+  return [...conversations].sort((a, b) => {
+    if (a.lastMessageTime === undefined && b.lastMessageTime !== undefined) return -1
+    if (a.lastMessageTime !== undefined && b.lastMessageTime === undefined) return 1
+    return 0
+  })
 })
 
 function formatTime(isoString: string): string {

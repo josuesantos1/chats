@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full bg-gray-100">
     <!-- Header -->
     <template v-if="showSearchSection">
-      <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0"
+      <div class="flex items-center flex-row px-5 py-3 border-b border-gray-200 shrink-0 bg-white"
       >
         <button
-          class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-xl"
+          class="text-gray-400 hover:text-gray-600 p-1 my-1 border-2 border-gray-200 rounded-md"
           @click="((cancelSearch = true), (searchQuery = ''), (showSearchSection = false))"
         >
           <v-icon name="hi-x" class="w-5 h-5" />
@@ -18,7 +18,7 @@
             v-model="searchQuery"
             type="text"
             placeholder="Pesquisar mensagens..."
-            class="w-full text-sm bg-gray-50 mx-2 rounded-xl focus:outline-none"
+            class="w-full text-sm bg-gray-50 mx-2 px-2 focus:outline-none "
             @input="searchHandler"
           />
         </span>
@@ -43,13 +43,13 @@
       </div>
     </template>
     <template v-else>
-      <div class="flex items-center gap-3 px-5 py-3 border-b border-gray-200 shrink-0">
+      <div class="flex items-center gap-3 px-5 py-3 border-b border-gray-200 shrink-0 bg-white">
         <UserAvatar :name="conversationName" size="md" class="cursor-pointer" @click="openAboutModel = true" />
         <div class="flex-1 min-w-0">
           <h2 class="font-semibold text-gray-900 text-sm">{{ conversationName }}</h2>
           <p class="text-xs text-gray-400 truncate">{{ subtitle }}</p>
         </div>
-        <button class="text-gray-400 hover:text-gray-600 p-1" @click="searchHandler">
+        <button class="text-gray-400 hover:text-gray-600 py-1 px-2 border rounded-md" @click="searchHandler">
           <v-icon name="hi-search" class="w-5 h-5" />
         </button>
       </div>
@@ -67,7 +67,7 @@
         <template v-for="group in groupedMessages" :key="group.date">
           <!-- Date separator -->
           <div class="flex justify-center py-3">
-            <span class="text-xs text-gray-400 px-3 py-0.5 rounded-full">
+            <span class="text-xs text-gray-400 px-3 py-0.5 rounded-full bg-white border border-gray-200">
               {{ group.date }}
             </span>
           </div>
@@ -132,7 +132,7 @@
     </div>
 
     <!-- Input -->
-    <div class="border-t border-gray-200 px-4 py-3 flex items-center gap-3 shrink-0">
+    <div class="border-t border-gray-200 px-4 py-3 flex items-center gap-3 shrink-0 bg-white">
       <input
         v-model="newMessage"
         type="text"
