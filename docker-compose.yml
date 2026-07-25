@@ -27,7 +27,7 @@ services:
       PHX_HOST: localhost
       PORT: 9000
       DATABASE_URL: ecto://postgres:postgres@db/backend_prod
-      SECRET_KEY_BASE: "${SECRET_KEY_BASE:?SECRET_KEY_BASE is required. Generate with: mix phx.gen.secret}"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE:-dev_only_insecure_secret_replace_in_production_aaaaaaaaaaaaaaaaaaaaa}"
     ports:
       - "9000:9000"
     depends_on:
