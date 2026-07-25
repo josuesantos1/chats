@@ -1,4 +1,4 @@
-# Chat — Teste Prático Full-Stack (Elixir + TypeScript)
+# Chats
 
 Aplicativo de mensagens em tempo real com suporte a conversas privadas e grupos.
 
