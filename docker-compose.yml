@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: backend_dev
+      POSTGRES_DB: backend_prod
     ports:
       - "5001:5432"
     volumes:
@@ -22,12 +22,12 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      MIX_ENV: dev
-      DB_HOST: db
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: backend_dev
+      MIX_ENV: prod
+      PHX_SERVER: "true"
+      PHX_HOST: localhost
       PORT: 9000
+      DATABASE_URL: ecto://postgres:postgres@db/backend_prod
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE:?SECRET_KEY_BASE is required. Generate with: mix phx.gen.secret}"
     ports:
       - "9000:9000"
     depends_on:
@@ -38,11 +38,11 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:9000/api
     restart: unless-stopped
-    environment:
-      VITE_API_URL: http://localhost:9000/api
     ports:
-      - "5173:5173"
+      - "5173:80"
     depends_on:
       - backend
 
