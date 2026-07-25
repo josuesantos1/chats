@@ -211,6 +211,8 @@ async function selectConversation(id: string) {
 
 function onGroupCreated(conversationId: string) {
   ui.closeNewGroupModal()
+  queryClient.invalidateQueries({ queryKey: ['conversations'] })
+  queryClient.invalidateQueries({ queryKey: ['groups'] })
   router.push({ name: 'conversation', params: { id: conversationId } })
 }
 

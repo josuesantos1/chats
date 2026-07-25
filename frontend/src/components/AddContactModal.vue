@@ -90,6 +90,7 @@
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/store/auth'
 import { contactsApi, conversationsApi, usersApi } from '@/services/api'
+import { useQueryClient } from '@tanstack/vue-query';
 
 const emit = defineEmits<{
   back: []
@@ -105,6 +106,8 @@ const status = ref<'idle' | 'success' | 'error'>('idle')
 const addedName = ref('')
 const addedUsername = ref('')
 
+const queryClient = useQueryClient()
+
 onMounted(() => inputRef.value?.focus())
 
 async function handleAdd() {
@@ -119,6 +122,13 @@ async function handleAdd() {
       return
     }
 
+    const existingContacts = await contactsApi.list()
+    const isAlreadyContact = existingContacts.some((contact) => contact.contact_id === user.id)
+    if (isAlreadyContact) {
+      status.value = 'success'
+      return
+    }
+
     await contactsApi.create({ user_id: auth.user.id, contact_id: user.id })
     addedName.value = user.name
     addedUsername.value = user.username
@@ -128,6 +138,9 @@ async function handleAdd() {
     for (const userId of userIds) {
       await conversationsApi.addMember(conversation.id, userId)
     }
+
+    queryClient.invalidateQueries({ queryKey: ['conversations'] })
+    queryClient.invalidateQueries({ queryKey: ['groups'] })
 
     status.value = 'success'
   } catch {

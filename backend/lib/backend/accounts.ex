@@ -65,7 +65,7 @@ defmodule Backend.Accounts do
     user = get_user_by_username(username)
 
     cond do
-      user && Bcrypt.verify_pass(password, user.password_hash) ->
+      user && user.password_hash && Bcrypt.verify_pass(password, user.password_hash) ->
         {:ok, user}
 
       user ->
