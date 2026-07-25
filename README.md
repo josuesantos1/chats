@@ -121,4 +121,12 @@ As mensagens são recuperadas diretamente do banco. Em um ambiente de produção
 
 ### Busca full-text
 
-A busca de mensagens atualmente é feita no frontend sobre as mensagens já carregadas. Para grandes volumes de dados, utilizaria elastc ou Sonic para pesquisa indexada no servidor.
+A busca de mensagens atualmente é feita no frontend sobre as mensagens já carregadas. Para grandes volumes de dados, utilizaria elastic ou Sonic para pesquisa indexada no servidor.
+
+### CI/CD
+
+Atualmente não há pipeline automatizada de testes e deploy. Implementaria uma pipeline com GitHub Actions para:
+
+- **Backend**: rodar `mix ci`
+- **Frontend**: rodar lint e testes de componentes com Vitest
+- **Deploy**: build das imagens Docker e publicação automática em talvez fly.io
